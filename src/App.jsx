@@ -12,23 +12,36 @@ import Footer from './footer'
 const App = () => {
   return (
     <div>
+      <div id="home">
+        <HeroSection />
+      </div>
+
+      <div id="about">
+        <AboutMe />
+      </div>
+
+      <div id="whyme">
+        <WhyMe />
+      </div>
+
+      <div id="projects">
+       <Projects />
+      </div>
+
+      <div id="skills">
+        <Skills />
+      </div>
+
+      <div id="contact">
+        <CTA />
+      </div>
+
       <div>
-      <HeroSection />
-      <Break />
+        <Footer/>
+      </div>
 
-      <AboutMe />
-      <Break />
-
-      <WhyMe />
-      <Skills />
-
-      <Break />
-      <Projects />
-
-      <CTA />
-      <Footer />
     </div>
-    </div>
+    
   )
 }
 

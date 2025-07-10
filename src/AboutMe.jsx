@@ -1,18 +1,33 @@
 import React, { useState } from 'react';
-import aboutImage from './assets/about.png'; // Placeholder for about image
-
+import aboutImage from './assets/about.png';
+import ContactPop from './ContactPop';
 
 const AboutMe = () => {
   const [hoveredTool, setHoveredTool] = useState(null);
   const [isQuoteHovered, setIsQuoteHovered] = useState(false);
+  const [showContact, setShowContact] = useState(false); // NEW STATE
 
   const tools = ['Make.com', 'GPT-4', 'Voiceflow', 'Airtable', 'Google Workspace'];
 
   return (
-    <div className="min-h-screen mt-1 bg-black text-white overflow-hidden">
-      
-    <div className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-16 px-6 py-16 max-w-7xl mx-auto">
-          <div className="flex-shrink-0 group">
+    <div className="min-h-screen mt-1 bg-black text-white overflow-hidden relative">
+      {/* Contact Popup */}
+      {showContact && (
+        <ContactPop onClose={() => setShowContact(false)} />
+      )}
+
+      {/* Animated Dots */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-20 w-2 h-2 bg-white rounded-full opacity-20 animate-pulse"></div>
+        <div className="absolute top-40 right-32 w-1 h-1 bg-white rounded-full opacity-30 animate-pulse delay-1000"></div>
+        <div className="absolute bottom-32 left-40 w-1 h-1 bg-white rounded-full opacity-25 animate-pulse delay-2000"></div>
+        <div className="absolute bottom-20 right-20 w-2 h-2 bg-white rounded-full opacity-20 animate-pulse delay-500"></div>
+      </div>
+
+      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-16 px-6 py-16 max-w-7xl mx-auto">
+        
+        {/* Profile Image */}
+        <div className="flex-shrink-0 group">
           <div className="w-80 h-80 rounded-3xl overflow-hidden border border-gray-700 shadow-2xl hover:scale-110 hover:border-white transition-all duration-500 hover:shadow-3xl">
             <img 
               src={aboutImage}
@@ -22,6 +37,7 @@ const AboutMe = () => {
           </div>
         </div>
 
+        {/* Text Section */}
         <div className="max-w-2xl">
           <h1 className="text-6xl font-bold mb-8 text-white hover:text-gray-300 transition-colors duration-300 cursor-default">
             About Me
@@ -81,7 +97,9 @@ const AboutMe = () => {
 
             {/* CTA Button */}
             <div className="mt-8">
-              <button className="group bg-white hover:bg-gray-200 text-black font-bold py-4 px-8 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95">
+              <button 
+                onClick={() => setShowContact(true)}
+                className="group bg-white hover:bg-gray-200 text-black font-bold py-4 px-8 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95">
                 <span className="flex items-center gap-2">
                   Let's Build Something Amazing
                   <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>

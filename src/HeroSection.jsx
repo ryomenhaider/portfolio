@@ -87,16 +87,19 @@ const HeroSection = () => {
           </p>
           <button 
             className={`group relative overflow-hidden bg-white text-black font-bold py-3 px-8 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 ${
-              buttonHovered ? 'bg-black text-white border-2 border-white' : ''
+              buttonHovered ? 'bg-black text-black border-2 border-white' : ''
             }`}
             onMouseEnter={() => setButtonHovered(true)}
             onMouseLeave={() => setButtonHovered(false)}
           >
             <span className="relative z-10 flex items-center gap-2">
               Contact Me
-              <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
+              <span className="group-hover:translate-x-1 group-hover:text-black transition-transform duration-300">
+                →
+              </span>
             </span>
           </button>
+
         </div>
 
         <div className="mt-12 lg:mt-0 lg:ml-16">

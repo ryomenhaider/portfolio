@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import ContactPop from './ContactPop'; // <-- Make sure path is correct
 
 const WhyMe = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [showPopup, setShowPopup] = useState(false); // <-- Popup state
 
   const features = [
     {
@@ -68,22 +70,15 @@ const WhyMe = () => {
                 onMouseEnter={() => setHoveredCard(index)}
                 onMouseLeave={() => setHoveredCard(null)}
               >
-                {/* Static tubelight effect at top */}
                 <div className='absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent opacity-60 rounded-t-2xl'></div>
 
                 <div className='relative z-10'>
-
-                  {/* Title */}
                   <h3 className='text-2xl font-bold mb-4 group-hover:text-gray-200 transition-colors duration-300'>
                     {feature.title}
                   </h3>
-
-                  {/* Description */}
                   <p className='text-gray-300 text-base leading-relaxed mb-6 group-hover:text-gray-200 transition-colors duration-300'>
                     {feature.description}
                   </p>
-
-                  {/* Stats */}
                   <div className='flex items-center justify-between'>
                     <span className='text-sm font-semibold text-gray-400 group-hover:text-white transition-colors duration-300'>
                       {feature.stats}
@@ -93,8 +88,6 @@ const WhyMe = () => {
                     </div>
                   </div>
                 </div>
-
-
               </div>
             ))}
           </div>
@@ -105,7 +98,10 @@ const WhyMe = () => {
               <p className='text-gray-300 text-lg mb-6 group-hover:text-white transition-colors duration-300'>
                 Ready to eliminate the friction in your business?
               </p>
-              <button className='bg-white hover:bg-gray-200 text-black font-bold py-4 px-8 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 group-hover:shadow-2xl'>
+              <button 
+                onClick={() => setShowPopup(true)}
+                className='bg-white hover:bg-gray-200 text-black font-bold py-4 px-8 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 group-hover:shadow-2xl'
+              >
                 <span className='flex items-center gap-2'>
                   Let's Talk Solutions
                   <span className='transform group-hover:translate-x-1 transition-transform duration-300'>→</span>
@@ -115,6 +111,15 @@ const WhyMe = () => {
           </div>
         </div>
       </div>
+
+      {/* ContactPop modal */}
+      {showPopup && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70'>
+          <div className='relative'>
+            <ContactPop onClose={() => setShowPopup(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

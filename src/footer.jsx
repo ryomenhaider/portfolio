@@ -35,9 +35,9 @@ const Footer = () => {
   ];
 
   const contacts = [
-    { type: 'email', label: 'Email', value: 'your@email.com' },
-    { type: 'whatsapp', label: 'WhatsApp', value: '+1 (555) 123-4567' },
-    { type: 'phone', label: 'Phone', value: '+1 (555) 123-4567' }
+    { type: 'email', label: 'Email', value: 'onlinep680@email.com' },
+    { type: 'whatsapp', label: 'WhatsApp', value: '+92 336 9466617' },
+    { type: 'phone', label: 'Phone', value: '+92 336 9466617' }
   ];
 
   return (

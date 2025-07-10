@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
+import ContactPop from './ContactPop';
 
 const CTA = () => {
   const [isHovered, setIsHovered] = useState(false);
-  const [emailCopied, setEmailCopied] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleEmailClick = () => {
-    navigator.clipboard.writeText('your@email.com');
-    setEmailCopied(true);
-    setTimeout(() => setEmailCopied(false), 2000);
+    setShowPopup(true);
   };
 
   return (
     <div className='bg-black py-20 px-6 text-white relative overflow-hidden'>
+      {/* Contact Popup */}
+      {showPopup && (
+        <ContactPop onClose={() => setShowPopup(false)} />
+      )}
+
       {/* Animated background pattern */}
       <div className='absolute inset-0 opacity-10'>
         <div className='absolute top-0 left-0 w-full h-full'>
@@ -33,7 +37,6 @@ const CTA = () => {
       </div>
 
       <div className='max-w-4xl mx-auto text-center relative z-10'>
-        {/* Main heading with typewriter effect */}
         <div className='mb-6'>
           <h2 className='text-5xl md:text-6xl font-bold mb-2 tracking-tight'>
             Let's Automate
@@ -43,14 +46,12 @@ const CTA = () => {
           </h2>
         </div>
 
-        {/* Enhanced description */}
         <div className='mb-12 space-y-4'>
           <p className='text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto'>
             Tired of wasting hours on manual tasks? Let me build an AI system that does it for you — 
             <span className='text-white font-semibold'> fast, clean, and custom</span> to your workflow.
           </p>
           
-          {/* Feature highlights */}
           <div className='flex flex-wrap justify-center gap-4 mt-8'>
             {['⚡ Lightning Fast', '🎯 Precision Built', '🔧 Custom Solutions'].map((feature, index) => (
               <div key={index} className='border border-white border-opacity-30 px-4 py-2 rounded-full text-sm hover:bg-white hover:text-black transition-all duration-300 cursor-default'>
@@ -60,7 +61,7 @@ const CTA = () => {
           </div>
         </div>
 
-        {/* Enhanced CTA buttons */}
+        {/* CTA Buttons */}
         <div className='flex flex-col sm:flex-row gap-4 justify-center items-center'>
           <button
             onClick={handleEmailClick}
@@ -70,9 +71,7 @@ const CTA = () => {
               isHovered ? 'bg-white text-black shadow-2xl' : 'bg-white text-black hover:bg-gray-100'
             }`}
           >
-            <span className='relative z-10'>
-              {emailCopied ? '📧 Email Copied!' : 'Contact Me'}
-            </span>
+            <span className='relative z-10'>Contact Me</span>
             <div className='absolute inset-0 bg-black opacity-0 group-hover:opacity-10 rounded-full transition-opacity duration-300' />
           </button>
           
@@ -84,7 +83,6 @@ const CTA = () => {
           </a>
         </div>
 
-        {/* Social proof or additional info */}
         <div className='mt-16 pt-8 border-t border-white border-opacity-20'>
           <div className='flex flex-col sm:flex-row justify-center items-center gap-8 text-gray-400'>
             <div className='flex items-center gap-2'>
