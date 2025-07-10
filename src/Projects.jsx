@@ -39,7 +39,7 @@ const Projects = () => {
   return (
     <div className='bg-black  py-16 px-6 text-white min-h-screen relative overflow-hidden'>
       {/* Enhanced animated background */}
-      <div className='absolute inset-0  overflow-hidden pointer-events-none'>
+      <div className='absolute inset-0   overflow-hidden pointer-events-none'>
         {[...Array(30)].map((_, i) => (
           <div
             key={i}
@@ -170,7 +170,7 @@ const Projects = () => {
       </div>
 
       {/* Custom styles for 3D transforms */}
-      <style jsx>{`
+      <style>{`
         .perspective-1000 {
           perspective: 1000px;
         }

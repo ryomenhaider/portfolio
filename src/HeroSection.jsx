@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from './NavBar';
 import HeroImg from './assets/hero.png'; // Pl  aceholder for hero image  
+
+console.log("If you are seeing this then fuck yeah, the code is working!");
 const Typewriter = () => {
   const [text, setText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);

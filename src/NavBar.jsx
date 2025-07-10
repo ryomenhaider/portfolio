@@ -1,20 +1,36 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ContactPop from './ContactPop'
 
 const NavBar = () => {
   const [activeItem, setActiveItem] = useState('Home')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showPopup, setShowPopup] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
 
   const navItems = ['Home', 'About', 'Why Me', 'Skills', 'Projects']
+
+  // Track scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY
+      setIsScrolled(scrollTop > 50) // Trigger after 50px scroll
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
     <>
       {/* Popup */}
       {showPopup && <ContactPop onClose={() => setShowPopup(false)} />}
 
-      <div className='fixed top-0 left-0 w-full z-50 bg-gradient-to-b from-gray-900 to-black text-white shadow-lg '>
-        <div className='flex justify-between items-center bg-black text-white h-16 mx-4 my-6 rounded-full px-8 shadow-2xl  backdrop-blur-sm'>
+      <div className='fixed top-0 left-0 w-full z-50 text-white shadow-lg'>
+        <div className={`flex justify-between items-center p-6 text-white h-16 mx-4 my-6 rounded-full px-8 shadow-2xl transition-all duration-500 ${
+          isScrolled 
+            ? 'bg-white/10 backdrop-blur-md border border-white/30' 
+            : 'bg-transparent border-transparent'
+        }`}>
           <div className='flex items-center'>
             <h1 className='text-2xl font-bold tracking-tight hover:scale-105 transition-transform duration-300 cursor-pointer'>
               Haider Ali
@@ -23,12 +39,12 @@ const NavBar = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center bg-white text-black rounded-full py-0.5 px-2 shadow">
+          <nav className="hidden backdrop-blur-md border border-white/30 p-6 md:flex items-center bg-white text-black rounded-full py-0.5 px-2 shadow">
             {['Home', 'About', 'Why Me', 'Projects', 'Skills'].map((item) => (
               <a
                 key={item}
                 href={`#${item.toLowerCase()}`}
-                className="px-4 py-2 mx-1 rounded-full hover:bg-gray-200 transition"
+                className="px-4 py-2 mx-1 rounded-full hover:bg-black hover:text-white transition duration-200"
               >
                 {item}
               </a>

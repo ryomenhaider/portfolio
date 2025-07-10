@@ -76,7 +76,7 @@ const CTA = () => {
           </button>
           
           <a
-            href='#portfolio'
+            href='#projects'
             className='inline-flex items-center px-8 py-4 border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-black transition-all duration-300 transform hover:scale-105'
           >
             View My Work
