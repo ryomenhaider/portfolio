@@ -23,7 +23,7 @@ const NavBar = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center bg-white text-black rounded-full py-2 px-4 shadow">
+          <nav className="hidden md:flex items-center bg-white text-black rounded-full py-0.5 px-2 shadow">
             {['Home', 'About', 'Why Me', 'Projects', 'Skills'].map((item) => (
               <a
                 key={item}
