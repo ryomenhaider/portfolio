@@ -37,9 +37,9 @@ const Projects = () => {
   ];
 
   return (
-    <div className='bg-black py-16 px-6 text-white min-h-screen relative overflow-hidden'>
+    <div className='bg-black  py-16 px-6 text-white min-h-screen relative overflow-hidden'>
       {/* Enhanced animated background */}
-      <div className='absolute inset-0 overflow-hidden pointer-events-none'>
+      <div className='absolute inset-0  overflow-hidden pointer-events-none'>
         {[...Array(30)].map((_, i) => (
           <div
             key={i}

@@ -20,7 +20,7 @@ const App = () => {
         <AboutMe />
       </div>
 
-      <div id="whyme">
+      <div id="why me">
         <WhyMe />
       </div>
 
