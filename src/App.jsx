@@ -6,7 +6,6 @@ import Skills from './Skills'
 import Projects from './Projects'
 import CTA from './CTA'
 import Footer from './footer'
-import Todos from './Todos'
 
 const App = () => {
   return (

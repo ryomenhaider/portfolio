@@ -49,7 +49,7 @@ const CTA = () => {
         <div className='mb-12 space-y-4'>
           <p className='text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto'>
             Tired of wasting hours on manual tasks? Let me build an AI system that does it for you — 
-            <span className='text-white font-semibold'> fast, clean, and custom</span> to your workflow.
+            <span className='text-white font-semibold hover:bg-white hover:text-black hover:rounded cursor-default'> fast, clean, and custom</span> to your workflow.
           </p>
           
           <div className='flex flex-wrap justify-center gap-4 mt-8'>
