@@ -44,7 +44,6 @@ const Loading = () => {
       
 
       
-      {/* Subtle loading indicator */}
       <div className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 transition-opacity duration-500 ${
         animationPhase === 'moveToNav' ? 'opacity-0' : 'opacity-100'
       }`}>
@@ -62,7 +61,7 @@ const Loading = () => {
         </div>
       </div>
       
-      <style jsx>{`
+      <style>{`
         @keyframes dropIn {
           0% { 
             transform: translateY(-400px); 

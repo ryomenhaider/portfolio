@@ -15,5 +15,6 @@ const App1 = () => {
 
   return <App />;
 };
+console.log("If you are seeing this then fuck yeah, the code is working!");
 
 export default App1;

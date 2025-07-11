@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from './NavBar';
-import HeroImg from './assets/hero.png'; // Pl  aceholder for hero image  
+import HeroImg from './assets/hero.png';
+import ContactPop from './ContactPop';
 
-console.log("If you are seeing this then fuck yeah, the code is working!");
 const Typewriter = () => {
   const [text, setText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [currentStringIndex, setCurrentStringIndex] = useState(0);
-  
+
   const strings = [
     "I Automate Your Business",
     "I Build AI Solutions",
     "I Save You Time",
     "I Scale Your Operations"
   ];
-  
+
   useEffect(() => {
     const currentString = strings[currentStringIndex];
     const timeout = setTimeout(() => {
@@ -36,10 +36,10 @@ const Typewriter = () => {
         }
       }
     }, isDeleting ? 50 : 100);
-    
+
     return () => clearTimeout(timeout);
-  }, [currentIndex, isDeleting, currentStringIndex, strings]);
-  
+  }, [currentIndex, isDeleting, currentStringIndex]);
+
   return (
     <span className="text-white">
       {text}
@@ -51,11 +51,16 @@ const Typewriter = () => {
 const HeroSection = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [buttonHovered, setButtonHovered] = useState(false);
-  
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handlepopup = () => {
+    setShowPopup(prev => !prev);
+  };
+
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden relative">
       <NavBar />
-      
+
       {/* Floating particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(15)].map((_, i) => (
@@ -71,9 +76,9 @@ const HeroSection = () => {
           />
         ))}
       </div>
-      
-      <div className="relative z-10 flex flex-col lg:flex-row justify-center items-center min-h-screen px-0 pt-0">
-        <div className="flex flex-col items-center lg:items-start justify-center text-center lg:text-left max-w-lg">
+
+      <div className="relative z-10 flex flex-col lg:flex-row justify-center items-center min-h-screen px-4 pt-0">
+        <div className="flex flex-col items-center lg:items-start justify-center text-center lg:text-left max-w-lg mt-16">
           <h1 className="text-5xl lg:text-6xl font-bold mb-6 hover:text-gray-300 transition-colors duration-300">
             <Typewriter />
           </h1>
@@ -88,6 +93,7 @@ const HeroSection = () => {
             </span>.
           </p>
           <button 
+            onClick={handlepopup}
             className={`group relative overflow-hidden bg-white text-black font-bold py-3 px-8 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 ${
               buttonHovered ? 'bg-black text-black border-2 border-white' : ''
             }`}
@@ -101,10 +107,9 @@ const HeroSection = () => {
               </span>
             </span>
           </button>
-
         </div>
 
-        <div className="mt-12 lg:mt-0 lg:ml-16">
+        <div className="mt-16 lg:mt-0 lg:ml-16">
           <div 
             className="relative group"
             onMouseEnter={() => setIsHovered(true)}
@@ -124,6 +129,13 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
+
+      {/* Contact Popup */}
+      {showPopup && (
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/60 backdrop-blur-sm px-4">
+          <ContactPop onClose={handlepopup} />
+        </div>
+      )}
     </div>
   );
 };
