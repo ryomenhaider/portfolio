@@ -12,7 +12,7 @@ const Footer = () => {
   const handleContact = (type) => {
     switch(type) {
       case 'email':
-        window.open('mailto:onlinep680@email.com');
+        window.open('mailto:codeflow.alpha1@gmail.com');
         break;
       case 'whatsapp':
         window.open('https://wa.me/+923369466617');
@@ -35,7 +35,7 @@ const Footer = () => {
   ];
 
   const contacts = [
-    { type: 'email', label: 'Email', value: 'onlinep680@email.com' },
+    { type: 'email', label: 'Email', value: 'codeflow.alpha1@gmail.com' },
     { type: 'whatsapp', label: 'WhatsApp', value: '+92 336 9466617' },
     { type: 'phone', label: 'Phone', value: '+92 336 9466617' }
   ];
