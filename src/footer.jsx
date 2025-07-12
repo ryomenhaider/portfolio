@@ -47,7 +47,7 @@ const Footer = () => {
           
           {/* Brand Section */}
           <div className='space-y-4'>
-            <h3 className='text-3xl font-bold'>Haider Ali</h3>
+            <h3 className='text-3xl font-bold'>CodeFlow.Alpha</h3>
             <p className='text-gray-300 leading-relaxed'>
               A passionate developer specializing in automation and AI solutions. 
               I help businesses streamline their workflows with custom-built systems 

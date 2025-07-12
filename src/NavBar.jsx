@@ -33,7 +33,7 @@ const NavBar = () => {
         }`}>
           <div className='flex items-center'>
             <h1 className='text-2xl font-bold tracking-tight hover:scale-105 transition-transform duration-300 cursor-pointer'>
-              Haider Ali
+              CodeFlow.Alpha
             </h1>
             <div className='ml-2 w-2 h-2 bg-white rounded-full animate-pulse'></div>
           </div>

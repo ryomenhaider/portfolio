@@ -38,7 +38,7 @@ const Loading = () => {
             animation: animationPhase === 'drop' ? 'dropIn 1s ease-out 0.5s forwards' : 'none'
           }}
         >
-          Haider Ali
+          CodeFlow.Alpha
         </div>
       </div>
       

@@ -35,7 +35,7 @@ const ContactPop = ({ onClose }) => {
     <div>
     <button 
       type='submit'
-      onClick=""
+      onClick={onClose}
       className="w-full mt-3 duration-300 bg-white text-black px-6 py-2 rounded-full hover:bg-black hover:text-white border border-white transition"
     >
       Submit
