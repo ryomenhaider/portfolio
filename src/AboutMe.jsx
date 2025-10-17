@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import aboutImage from './assets/about.png';
+<<<<<<< HEAD
 import ContactPop from './components/ContactPop';
+=======
+import ContactPop from './ContactPop';
+>>>>>>> 0a0e9479cd8717c1e5505d7f2ccb7c0a6706280b
 
 const AboutMe = () => {
   const [hoveredTool, setHoveredTool] = useState(null);

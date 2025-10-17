@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import ContactPop from './components/ContactPop';
+=======
+import ContactPop from './ContactPop';
+>>>>>>> 0a0e9479cd8717c1e5505d7f2ccb7c0a6706280b
 
 const CTA = () => {
   const [isHovered, setIsHovered] = useState(false);

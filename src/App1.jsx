@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import Loading from './components/Loading';
+=======
+import Loading from './Loading';
+>>>>>>> 0a0e9479cd8717c1e5505d7f2ccb7c0a6706280b
 import App from './App';
 
 const App1 = () => {

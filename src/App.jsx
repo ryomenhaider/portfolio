@@ -6,7 +6,10 @@ import Skills from './Skills'
 import Projects from './Projects'
 import CTA from './CTA'
 import Footer from './footer'
+<<<<<<< HEAD
 import ChatSalesWidget from './components/chat' // Import here
+=======
+>>>>>>> 0a0e9479cd8717c1e5505d7f2ccb7c0a6706280b
 
 const App = () => {
   return (
@@ -39,6 +42,7 @@ const App = () => {
         <Footer/>
       </div>
 
+<<<<<<< HEAD
       {/* Chat widget - renders as a floating button in bottom-right */}
       <ChatSalesWidget />
     </div>
@@ -46,3 +50,11 @@ const App = () => {
 }
 
 export default App
+=======
+    </div>
+    
+  )
+}
+
+export default App
+>>>>>>> 0a0e9479cd8717c1e5505d7f2ccb7c0a6706280b

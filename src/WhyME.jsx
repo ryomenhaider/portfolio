@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import ContactPop from './components/ContactPop'; // <-- Make sure path is correct
+=======
+import ContactPop from './ContactPop'; // <-- Make sure path is correct
+>>>>>>> 0a0e9479cd8717c1e5505d7f2ccb7c0a6706280b
 
 const WhyMe = () => {
   const [hoveredCard, setHoveredCard] = useState(null);

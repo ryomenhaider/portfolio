@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from './NavBar';
 import HeroImg from './assets/hero.png';
+<<<<<<< HEAD
 import ContactPop from './components/ContactPop';
+=======
+import ContactPop from './ContactPop';
+>>>>>>> 0a0e9479cd8717c1e5505d7f2ccb7c0a6706280b
 
 const Typewriter = () => {
   const [text, setText] = useState('');
@@ -77,6 +81,7 @@ const HeroSection = () => {
         ))}
       </div>
 
+<<<<<<< HEAD
       {/* Main Content */}
       <div className="relative z-10 flex flex-col lg:flex-row justify-center items-center min-h-screen px-6 sm:px-10 md:px-16 lg:px-24 pt-24 md:pt-32 pb-16">
         <div className="flex flex-col items-center lg:items-start justify-center text-center lg:text-left max-w-lg mt-10 sm:mt-16">
@@ -84,6 +89,14 @@ const HeroSection = () => {
             <Typewriter />
           </h1>
           <p className="text-lg sm:text-xl lg:text-2xl mb-8 text-gray-300 hover:text-white transition-colors duration-300 cursor-default leading-relaxed">
+=======
+      <div className="relative z-10 flex flex-col lg:flex-row justify-center items-center min-h-screen px-4 pt-0">
+        <div className="flex flex-col items-center lg:items-start justify-center text-center lg:text-left max-w-lg mt-16">
+          <h1 className="text-5xl lg:text-6xl font-bold mb-6 hover:text-gray-300 transition-colors duration-300">
+            <Typewriter />
+          </h1>
+          <p className="text-xl lg:text-2xl mb-8 text-gray-300 hover:text-white transition-colors duration-300 cursor-default">
+>>>>>>> 0a0e9479cd8717c1e5505d7f2ccb7c0a6706280b
             I build AI automation systems that{' '}
             <span className="text-white font-semibold hover:bg-white hover:text-black px-1 rounded transition-all duration-300">
               save hours
@@ -110,7 +123,11 @@ const HeroSection = () => {
           </button>
         </div>
 
+<<<<<<< HEAD
         <div className="mt-16 lg:mt-0 lg:ml-16 flex justify-center">
+=======
+        <div className="mt-16 lg:mt-0 lg:ml-16">
+>>>>>>> 0a0e9479cd8717c1e5505d7f2ccb7c0a6706280b
           <div 
             className="relative group"
             onMouseEnter={() => setIsHovered(true)}
@@ -119,7 +136,11 @@ const HeroSection = () => {
             <div className={`absolute -inset-2 bg-gradient-to-r from-white/20 to-white/10 rounded-3xl blur transition-all duration-500 ${
               isHovered ? 'opacity-100 animate-pulse' : 'opacity-0'
             }`}></div>
+<<<<<<< HEAD
             <div className="relative w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 bg-gradient-to-br from-gray-900 to-black rounded-3xl border border-white/20 shadow-2xl overflow-hidden hover:scale-110 transition-all duration-500 hover:border-white/40">
+=======
+            <div className="relative w-80 h-80 bg-gradient-to-br from-gray-900 to-black rounded-3xl border border-white/20 shadow-2xl overflow-hidden hover:scale-110 transition-all duration-500 hover:border-white/40">
+>>>>>>> 0a0e9479cd8717c1e5505d7f2ccb7c0a6706280b
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
               <img 
                 src={HeroImg} 
