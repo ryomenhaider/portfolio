@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import ContactPop from './components/ContactPop'
-import ContactPop from './ContactPop'
 
 const NavBar = () => {
   const [activeItem, setActiveItem] = useState('Home')
