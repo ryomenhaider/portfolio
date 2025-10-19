@@ -40,21 +40,21 @@ const AboutMe = () => {
         {/* Text Section */}
         <div className="max-w-2xl">
           <h1 className="text-6xl font-bold mb-8 text-white hover:text-gray-300 transition-colors duration-300 cursor-default">
-            About Me
+            About Us
           </h1>
           
           <div className="space-y-6 text-lg leading-relaxed">
             <p className="text-gray-300 hover:text-white transition-colors duration-300 cursor-default">
-              I build AI systems that{' '}
+              We build AI systems that{' '}
               <span className="text-white font-semibold hover:bg-white hover:text-black px-1 rounded transition-all duration-300 cursor-default">actually work</span>.
             </p>
 
             <p className="text-gray-300 hover:text-white transition-colors duration-300 cursor-default">
-              From lead gen to client onboarding, proposal generation to CRM updates—if it's repetitive, I automate it.
+              From lead gen to client onboarding, proposal generation to CRM updates—if it's repetitive, We automate it.
             </p>
 
             <div className="py-4">
-              <p className="text-gray-300 mb-4 hover:text-white transition-colors duration-300 cursor-default">I use cutting-edge tools like:</p>
+              <p className="text-gray-300 mb-4 hover:text-white transition-colors duration-300 cursor-default">We use cutting-edge tools like:</p>
               <div className="flex flex-wrap gap-3">
                 {tools.map((tool, index) => (
                   <span
@@ -86,7 +86,7 @@ const AboutMe = () => {
               onMouseLeave={() => setIsQuoteHovered(false)}
             >
               <p className="text-gray-300 mb-4 hover:text-white transition-colors duration-300">
-                I don't just play with tools—I solve problems that make business owners say:
+                We don't just play with tools—We solve problems that make business owners say:
               </p>
               <blockquote className={`text-xl italic text-gray-400 border-l-4 pl-4 transition-all duration-300 ${
                 isQuoteHovered ? 'border-white text-white transform translate-x-2' : 'border-gray-600'

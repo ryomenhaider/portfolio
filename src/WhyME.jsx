@@ -8,17 +8,17 @@ const WhyMe = () => {
   const features = [
     {
       title: "Real-World Impact",
-      description: "I build systems that save time, boost profit, and remove bottlenecks. No fluff. Just results.",
+      description: "We build systems that save time, boost profit, and remove bottlenecks. No fluff. Just results.",
       stats: "40+ hrs/week saved"
     },
     {
       title: "Custom AI Workflows", 
-      description: "Every business is different. I design AI-powered automations tailored to your exact operations.",
+      description: "Every business is different. We design AI-powered automations tailored to your exact operations.",
       stats: "100% customized"
     },
     {
       title: "Fast Execution",
-      description: "I move fast, communicate clearly, and build systems that work without endless back-and-forth.",
+      description: "We move fast, communicate clearly, and build systems that work without endless back-and-forth.",
       stats: "24-48hr delivery"
     }
   ];
@@ -44,12 +44,12 @@ const WhyMe = () => {
             <h2 className='text-6xl md:text-7xl font-bold mb-8 leading-tight'>
               Why Work{' '}
               <span className='relative'>
-                With Me?
+                With Us?
                 <div className='absolute bottom-2 left-0 w-full h-1 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500'></div>
               </span>
             </h2>
             <p className='text-gray-300 text-xl md:text-2xl mb-4 max-w-3xl mx-auto leading-relaxed'>
-              I don't just automate tasks — I{' '}
+              We don't just automate tasks — We{' '}
               <span className='text-white font-semibold hover:bg-white hover:text-black px-2 py-1 rounded transition-all duration-300'>
                 eliminate friction
               </span>

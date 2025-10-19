@@ -37,7 +37,7 @@ const Footer = () => {
   const contacts = [
     { type: 'email', label: 'Email', value: 'codeflow.alpha1@gmail.com' },
     { type: 'whatsapp', label: 'WhatsApp', value: '+92 336 9466617' },
-    { type: 'phone', label: 'Phone', value: '+92 336 9466617' }
+    { type: 'Id', label: 'Instagram', value: 'codeflow.alpha' }
   ];
 
   return (
@@ -47,10 +47,10 @@ const Footer = () => {
           
           {/* Brand Section */}
           <div className='space-y-4'>
-            <h3 className='text-3xl font-bold'>CodeFlow.Alpha</h3>
+            <h3 className='text-3xl font-bold'>Alpha Automations</h3>
             <p className='text-gray-300 leading-relaxed'>
-              A passionate developer specializing in automation and AI solutions. 
-              I help businesses streamline their workflows with custom-built systems 
+              A passionate Agency specializing in automation and AI solutions. 
+              We help businesses streamline their workflows with custom-built systems 
               that save time and increase efficiency.
             </p>
           </div>
@@ -106,7 +106,7 @@ const Footer = () => {
         <div className='border-t border-gray-800 pt-8'>
           <div className='flex flex-col sm:flex-row justify-between items-center gap-4'>
             <p className='text-gray-400 text-sm'>
-              © {new Date().getFullYear()} Haider Ali. All rights reserved.
+              © {new Date().getFullYear()} Alpha Automations. All rights reserved.
             </p>
             <div className='flex items-center gap-6 text-sm text-gray-400'>
               <span>Available for projects</span>

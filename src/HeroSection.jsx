@@ -10,10 +10,10 @@ const Typewriter = () => {
   const [currentStringIndex, setCurrentStringIndex] = useState(0);
 
   const strings = [
-    "I Automate Your Business",
-    "I Build AI Solutions",
-    "I Save You Time",
-    "I Scale Your Operations"
+    "We Automate Your Business",
+    "We Build AI Solutions",
+    "We Save You Time",
+    "We Scale Your Operations"
   ];
 
   useEffect(() => {
@@ -84,7 +84,7 @@ const HeroSection = () => {
             <Typewriter />
           </h1>
           <p className="text-lg sm:text-xl lg:text-2xl mb-8 text-gray-300 hover:text-white transition-colors duration-300 cursor-default leading-relaxed">
-            I build AI automation systems that{' '}
+            We build AI automation systems that{' '}
             <span className="text-white font-semibold hover:bg-white hover:text-black px-1 rounded transition-all duration-300">
               save hours
             </span>{' '}

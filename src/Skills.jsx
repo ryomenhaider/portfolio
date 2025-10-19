@@ -7,7 +7,7 @@ const Skills = () => {
     {
       title: 'AI Automation',
       description:
-        'I build AI-powered systems that automate repetitive workflows — lead gen, onboarding, proposal generation, CRM sync, and more.',
+        'We build AI-powered systems that automate repetitive workflows — lead gen, onboarding, proposal generation, CRM sync, and more.',
       tools: ['Make.com', 'Zapier', 'Tally', 'Airtable'],
       level: 'Expert',
       experience: '15+ business-ready automations',
@@ -16,7 +16,7 @@ const Skills = () => {
     {
       title: 'AI Agents',
       description:
-        'I design and deploy autonomous AI agents that perform tasks, make decisions, and interact with APIs using Python + LLMs.',
+        'We design and deploy autonomous AI agents that perform tasks, make decisions, and interact with APIs using Python + LLMs.',
       tools: ['GPT-4', 'OpenAI API', 'n8n'],
       level: 'Intermediate',
       experience: 'Expanding with real use cases',
@@ -25,7 +25,7 @@ const Skills = () => {
     {
       title: 'AI Chatbots',
       description:
-        'I create intelligent chatbots that handle customer support, lead qualification, and appointment booking with human-like flow.',
+        'We create intelligent chatbots that handle customer support, lead qualification, and appointment booking with human-like flow.',
       tools: ['Voiceflow', 'GPT-4', 'Google Sheets', 'Calendly', 'Webhooks'],
       level: 'Advanced',
       experience: 'Deployed on multiple client websites',
@@ -34,7 +34,7 @@ const Skills = () => {
     {
       title: 'Prompt Engineering',
       description:
-        'I craft high-performing prompts that drive consistent, useful outputs from AI models for writing, analysis, and task automation.',
+        'We craft high-performing prompts that drive consistent, useful outputs from AI models for writing, analysis, and task automation.',
       tools: ['GPT-4', 'Claude', 'ChatGPT', 'System prompts', 'Role-based chaining'],
       level: 'Expert',
       experience: 'Mastered through hundreds of prompt tests',
@@ -66,7 +66,7 @@ const Skills = () => {
           <div className='text-center mb-16'>
             <div className='inline-block mb-4'>
               <span className='text-gray-400 text-sm uppercase tracking-wider font-semibold'>
-                What I Bring
+                What We Bring
               </span>
             </div>
             <h2 className='text-6xl md:text-7xl font-bold mb-8 leading-tight'>
@@ -77,7 +77,7 @@ const Skills = () => {
               </span>
             </h2>
             <p className='text-gray-300 text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed'>
-              These are the tools and expertise I use to{' '}
+              These are the tools and expertise We use to{' '}
               <span className='text-white font-semibold hover:bg-white hover:text-black px-2 py-1 rounded transition-all duration-300'>
                 transform your business
               </span>
@@ -161,30 +161,7 @@ const Skills = () => {
                 </div>
               </div>
             ))}
-          </div>
-
-          {/* Bottom Stats Section */}
-          <div className='text-center'>
-            <div className='inline-block p-8 border border-gray-800 rounded-3xl bg-gray-900/30 hover:border-white hover:bg-gray-900/60 transition-all duration-500 group'>
-              <div className='grid grid-cols-2 md:grid-cols-4 gap-8 text-center'>
-                <div className='group-hover:scale-105 transition-transform duration-300'>
-                  <div className='text-3xl font-bold text-white mb-2'>15+</div>
-                  <div className='text-sm text-gray-400'>Automations Built</div>
-                </div>
-                <div className='group-hover:scale-105 transition-transform duration-300'>
-                  <div className='text-3xl font-bold text-white mb-2'>500+</div>
-                  <div className='text-sm text-gray-400'>Hours Saved</div>
-                </div>
-                <div className='group-hover:scale-105 transition-transform duration-300'>
-                  <div className='text-3xl font-bold text-white mb-2'>10+</div>
-                  <div className='text-sm text-gray-400'>Happy Clients</div>
-                </div>
-                <div className='group-hover:scale-105 transition-transform duration-300'>
-                  <div className='text-3xl font-bold text-white mb-2'>2+</div>
-                  <div className='text-sm text-gray-400'>Years Experience</div>
-                </div>
-              </div>
-            </div>
+          
           </div>
         </div>
       </div>

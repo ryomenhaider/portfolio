@@ -206,7 +206,7 @@ const ChatSalesWidget = () => {
       <button
         onClick={() => setIsOpen(true)}
         aria-label="Open sales chat"
-        className="fixed bottom-6 right-6 w-14 h-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 z-50"
+        className="fixed bottom-6 right-6 w-14 h-14 bg-white hover:bg-black text-black rounded-full shadow-lg flex items-center hover:text-white justify-center transition-transform hover:scale-110 z-50"
       >
         <MessageCircle size={28} />
       </button>
@@ -218,7 +218,7 @@ const ChatSalesWidget = () => {
       {/* HEADER */}
       <div
         className={`p-4 flex items-center justify-between ${
-          isDark ? 'bg-gray-900 text-white' : 'bg-blue-500 text-white'
+          isDark ? 'bg-black text-white' : 'bg-blue-500 text-white'
         }`}
       >
         <div>
@@ -226,13 +226,7 @@ const ChatSalesWidget = () => {
           <p className="text-xs opacity-90">We're here to help</p>
         </div>
         <div className="flex gap-2">
-          <button
-            onClick={() => setIsDark(!isDark)}
-            aria-label="Toggle dark mode"
-            className="p-2 hover:bg-white/20 rounded transition"
-          >
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
+          
           <button
             onClick={() => setIsOpen(false)}
             aria-label="Close chat"
@@ -248,7 +242,7 @@ const ChatSalesWidget = () => {
       {/* MESSAGES */}
       <div
         className={`flex-1 overflow-y-auto p-4 space-y-3 ${
-          isDark ? 'bg-gray-800' : 'bg-gray-50'
+          isDark ? 'bg-black' : 'bg-gray-50'
         }`}
       >
         {messages.map((msg) => (
@@ -260,10 +254,10 @@ const ChatSalesWidget = () => {
               className={`max-w-xs px-4 py-2 rounded-lg text-sm leading-relaxed ${
                 msg.sender === 'user'
                   ? isDark
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-blue-500 text-white'
+                    ? 'bg-black text-white'
+                    : 'bg-black text-white'
                   : isDark
-                  ? 'bg-gray-700 text-gray-100'
+                  ? 'bg-gray-9000 text-gray-100'
                   : 'bg-white text-gray-800 border border-gray-200'
               }`}
             >
@@ -275,7 +269,7 @@ const ChatSalesWidget = () => {
           <div className="flex justify-start">
             <div
               className={`px-4 py-2 rounded-lg text-sm ${
-                isDark ? 'bg-gray-700 text-gray-300' : 'bg-white text-gray-600'
+                isDark ? 'bg-black text-gray-300' : 'bg-black text-white'
               }`}
             >
               <div className="flex gap-1">
@@ -298,7 +292,7 @@ const ChatSalesWidget = () => {
       {/* INPUT */}
       <div
         className={`p-3 border-t ${
-          isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+          isDark ? 'bg-black border-white' : 'bg-white border-gray-200'
         }`}
       >
         <div className="flex gap-2">
@@ -317,7 +311,7 @@ const ChatSalesWidget = () => {
             disabled={loading}
             className={`flex-1 px-3 py-2 rounded border text-sm focus:outline-none focus:ring-2 ${
               isDark
-                ? 'bg-gray-700 border-gray-600 text-white focus:ring-blue-500'
+                ? 'bg-black border-white text-white focus:ring-white'
                 : 'bg-white border-gray-300 focus:ring-blue-500'
             }`}
           />
@@ -328,7 +322,7 @@ const ChatSalesWidget = () => {
             className={`px-3 py-2 rounded font-medium flex items-center gap-2 transition ${
               loading || !input.trim()
                 ? isDark
-                  ? 'bg-gray-700 text-gray-500'
+                  ? 'bg-black hover:bg-white text-gray-500'
                   : 'bg-gray-200 text-gray-400'
                 : isDark
                 ? 'bg-blue-600 hover:bg-blue-700 text-white'

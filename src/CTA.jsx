@@ -48,7 +48,7 @@ const CTA = () => {
 
         <div className='mb-12 space-y-4'>
           <p className='text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto'>
-            Tired of wasting hours on manual tasks? Let me build an AI system that does it for you — 
+            Tired of wasting hours on manual tasks? Let us build an AI system that does it for you — 
             <span className='text-white font-semibold hover:bg-white hover:text-black hover:rounded cursor-default'> fast, clean, and custom</span> to your workflow.
           </p>
           
@@ -71,7 +71,7 @@ const CTA = () => {
               isHovered ? 'bg-white text-black shadow-2xl' : 'bg-white text-black hover:bg-gray-100'
             }`}
           >
-            <span className='relative z-10'>Contact Me</span>
+            <span className='relative z-10'>Contact Us</span>
             <div className='absolute inset-0 bg-black opacity-0 group-hover:opacity-10 rounded-full transition-opacity duration-300' />
           </button>
           

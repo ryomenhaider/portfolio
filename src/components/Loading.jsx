@@ -29,7 +29,7 @@ const Loading = () => {
             animation: animationPhase === 'drop' ? 'dropIn 1s ease-out 0.5s forwards' : 'none',
           }}
         >
-          CodeFlow.<span className="text-gray-400">Alpha</span>
+          Alpha<span className="text-gray-400"> Automations</span>
         </div>
       </div>
 

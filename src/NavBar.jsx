@@ -36,7 +36,7 @@ const NavBar = () => {
           {/* Logo */}
           <div className="flex items-center space-x-2">
             <h1 className="text-lg sm:text-xl font-bold tracking-tight hover:scale-105 transition-transform duration-300 cursor-pointer">
-              CodeFlow.Alpha
+              Alpha Automations
             </h1>
             <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
           </div>
