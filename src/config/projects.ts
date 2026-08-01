@@ -66,11 +66,11 @@ export function getProject(slug: string): Project | undefined {
 }
 
 export const owner = 'haiderali';
-export const siteUrl = 'https://haideralidev.xyz';
+export const siteUrl = 'https://haideralidev95.vercel.app/';
 
 // TODO: replace with your real profile URLs
 export const socials = {
   github: 'https://github.com/ryomenhaider',
-  linkedin: 'https://www.linkedin.com/in/haiderali',
-  x: 'https://x.com/haiderali',
+  linkedin: 'https://www.linkedin.com/in/haider-ali-4634773a2/',
+  x: 'https://x.com/haideralidev95',
 };
