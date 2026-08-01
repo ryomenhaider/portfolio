@@ -11,12 +11,6 @@ const tech: Record<string, string[]> = {
   vecta: ['C++17', 'pybind11', 'CMake', 'Catch2'],
 };
 
-const stats = [
-  { value: '5', label: 'open-source projects' },
-  { value: '27', label: 'documentation pages' },
-  { value: '4', label: 'stacks, one focus' },
-];
-
 const skills = [
   {
     category: 'Languages',
@@ -65,8 +59,8 @@ const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', 
           <p class="reveal font-mono text-sm text-[#a78bfa] tracking-widest mb-5">
             $ whoami — software engineer
           </p>
-          <h1 class="reveal font-black tracking-tighter leading-[0.95] text-6xl sm:text-7xl lg:text-8xl">
-            HAIDER<br /><span class="text-shimmer">ALI</span>
+          <h1 class="reveal font-black tracking-tighter leading-[0.95] text-5xl sm:text-6xl lg:text-7xl whitespace-nowrap">
+            HAIDER <span class="text-shimmer">ALI</span>
           </h1>
           <p class="reveal mt-7 text-lg text-white/70 max-w-xl leading-relaxed">
             I build <span class="text-white font-semibold">data platforms</span>,
@@ -146,18 +140,6 @@ const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', 
       </div>
     </section>
 
-    <!-- STATS -->
-    <section class="border-y border-white/10 bg-white/[0.02]">
-      <div class="max-w-6xl mx-auto px-4 py-10 grid grid-cols-3 gap-6 text-center">
-        {stats.map((s) => (
-          <div>
-            <div class="font-black text-4xl sm:text-5xl text-white">{s.value}</div>
-            <div class="mt-1.5 text-[11px] uppercase tracking-[0.2em] text-white/40">{s.label}</div>
-          </div>
-        ))}
-      </div>
-    </section>
-
     <!-- ABOUT -->
     <section id="about" class="max-w-6xl mx-auto px-4 py-20 lg:py-28 scroll-mt-16">
       <div class="grid lg:grid-cols-[1fr_1.4fr] gap-10 items-start">
@@ -224,19 +206,19 @@ const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', 
         </a>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 lg:gap-4">
         {projects.map((p, i) => (
           <a
             href={`/${p.slug}`}
-            class="group relative rounded-xl border border-white/10 bg-white/[0.03] p-6 flex flex-col gap-4 transition-all duration-300 hover:border-[#a78bfa]/60 hover:bg-white/[0.06] hover:-translate-y-1"
+            class="reveal-left group relative rounded-xl border border-white/10 bg-white/[0.03] p-4 flex flex-col gap-3 transition-all duration-300 hover:border-[#a78bfa]/60 hover:bg-white/[0.06] hover:-translate-y-1"
             style={`animation-delay: ${i * 0.08}s`}
           >
             <div
               class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
               style="background: radial-gradient(400px circle at 50% 0%, rgba(167,139,250,0.14), transparent 60%)"
             />
-            <div class="relative flex items-center justify-between gap-3">
-              <span class="text-2xl font-black tracking-tight group-hover:text-[#a78bfa] transition-colors">
+            <div class="relative flex items-center justify-between gap-2">
+              <span class="text-lg font-black tracking-tight group-hover:text-[#a78bfa] transition-colors">
                 {p.name}
               </span>
               <span
@@ -250,19 +232,24 @@ const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', 
                 {p.status}
               </span>
             </div>
-            <div class="relative text-[13px] uppercase tracking-[0.25em] text-[#a78bfa]">
+            <div class="relative text-[12px] uppercase tracking-[0.25em] text-[#a78bfa]">
               {p.tagline}
             </div>
-            <p class="relative text-sm text-white/60 leading-relaxed">{p.description}</p>
-            <div class="relative flex flex-wrap gap-2">
-              {tech[p.slug]?.map((t) => (
-                <span class="font-mono text-[11px] px-2 py-1 rounded-md bg-white/5 border border-white/10 text-white/60">
+            <p class="relative text-[13px] text-white/60 leading-relaxed line-clamp-3">{p.description}</p>
+            <div class="relative flex flex-wrap gap-1.5 mt-auto">
+              {tech[p.slug]?.slice(0, 3).map((t) => (
+                <span class="font-mono text-[10px] px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-white/60">
                   {t}
                 </span>
               ))}
+              {(tech[p.slug]?.length ?? 0) > 3 && (
+                <span class="font-mono text-[10px] px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-white/40">
+                  +{tech[p.slug]!.length - 3}
+                </span>
+              )}
             </div>
             <div class="relative mt-1 flex items-center justify-between">
-              <span class="text-sm font-semibold text-white/80 group-hover:text-white transition-colors">
+              <span class="text-[13px] font-semibold text-white/80 group-hover:text-white transition-colors">
                 Read the docs
               </span>
               <span class="transition-transform duration-300 group-hover:translate-x-1.5 text-[#a78bfa]">
@@ -320,7 +307,7 @@ const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', 
       <p class="mt-5 text-white/60 max-w-md mx-auto leading-relaxed">
         Open to collaborations, interesting problems, and feedback on the projects.
       </p>
-      <div class="mt-9 flex items-center justify-center gap-4">
+      <div class="mt-9 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
         <a
           href={socials.linkedin}
           target="_blank"

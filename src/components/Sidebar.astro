@@ -38,7 +38,7 @@ const sectionEntries = [...sections.entries()].map(([name, list]) => [
 const allItems = [...topItems, ...sectionEntries.flatMap(([, list]) => list)];
 ---
 
-<aside class="w-64 min-w-64 border-r border-white/10 h-full overflow-y-auto bg-[#0e0e15]">
+<aside class="w-full lg:w-64 lg:min-w-64 border-r border-white/10 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] max-h-[60vh] lg:max-h-none overflow-y-auto bg-[#0e0e15]">
   <nav class="py-3 px-2">
     {topItems.map((item) => (
       <a

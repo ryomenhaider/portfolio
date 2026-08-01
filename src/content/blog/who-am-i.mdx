@@ -1,0 +1,81 @@
+---
+title: "Who Am I?"
+description: "A long-form introduction — how I got into code, why I build these projects, and what I'm working toward."
+date: 2026-07-25
+tags: ["intro", "about", "me"]
+draft: false
+---
+
+Hey. I'm **Haider Ali**. I'm a student, a self-taught programmer, and I build things that turn messy data into something people can actually use.
+
+People ask me to write about myself and I always end up with something that reads like a résumé, so this time I'm going to do it differently. I'm going to talk like I would in person, at 2 AM, halfway through a pipeline that finally works. That's the most honest version of me there is.
+
+## Where the story starts
+
+I'm self-taught, which sounds neat in a bio, but the real story is a slow slide into obsession over about six years.
+
+I don't remember the exact moment I wrote my first line of code. I remember the room, the old machine, and the feeling better than I remember the syntax: I gave the computer an instruction and it did what I told it to. Not approximately, not when it felt like it. Exactly. For a teenager who spent most of his time being told what to do, that felt like the most expensive toy in the world.
+
+I did nothing useful with it for years. Small scripts. Broken games. A chatbot that insulted the user instead of answering. Half-finished everything. There are probably forty abandoned folders on old drives with names like `project_final_really_final.py`. I didn't have direction, I just had the itch.
+
+What changed wasn't a course or a tutorial. It was the first problem that was too big to walk away from. I needed country data: risk indicators, development statistics, sanctions lists. Not a lot of it, just enough to answer some questions I had about why some economies behave the way they do.
+
+Every source gave me the data in a different shape. A CSV here. An XML file there. A zip archive containing a folder containing another folder containing a file called `data_v2_final_2.zip`. A README written in 2009 that explained nothing. I spent more hours fighting formats than I spent doing anything with the actual numbers. At one point I literally had three different country lists, each using a different code scheme, and I was joining them by hand in a spreadsheet.
+
+That's the moment. The spreadsheet moment. I remember staring at it, thinking: this is not what software was supposed to be. And instead of complaining about it, I got angry enough to build something that fixed it. That was the spark for Hermes, and it's still the project I care about most on this site.
+
+## Why I'm a student and why it matters
+
+Right now I'm a student, which means my real life is a juggling act: coursework during the day, and the projects at night, when the work actually happens. I've written this paragraph four times trying to make it sound glamorous and it just isn't. It's a constant trade of one deadline for another, and I've missed more sleep than I should admit.
+
+But here's the part I actually believe. The projects are the school now. Class gives me the map, and the projects are where I actually walk the terrain. Every lecture that mentions a concept I've had to debug at midnight sticks in a way that no amount of note-taking would have done. The ugly parts, the parts where the data is dirty and nothing works the first time, those are the parts you only learn by doing, and I've done them enough times that I can feel the difference.
+
+It's also taught me something nobody tells you about being self-taught: the gaps never close. There's always a paper you haven't read. A concept you nodded along to that you couldn't reproduce if your life depended on it. I used to hide from those gaps. I'd scroll past anything that made me feel stupid. Then one day I realized the only people who feel like they know everything are the ones who stopped looking. So now I go straight at the gaps instead of around them. That's the whole secret, honestly. It's not talent, it's just not looking away.
+
+## The habit of rebuilding things
+
+I have a bad habit that's turned into my best quality: I reimplement things that already exist.
+
+Not because I think I can do it better. Because I don't trust an abstraction I didn't write. When I call a library, part of my brain is always asking: what is actually happening in there? What does this function do when the input is weird? What does it do when it silently fails? I can't rest until I know, and the only way to know is to build it.
+
+That's how Vecta started. I was reading an ML textbook, the kind where every other page has an equation you're supposed to just accept. And I was taking notes. Real notes, page by page, by hand. And somewhere around the chapter on optimization, I caught myself nodding along to math I could not have reproduced if you asked me to.
+
+So I put the book down and started writing it myself, in C++, with zero external dependencies. No Eigen, no Armadillo, nothing. Just me, a compiler, and the equations. I wrote the matrix multiplication myself. I wrote the gradient descent myself. And I want to tell you that the first time it ran, I cheered. What actually happened is I spent four hours debugging a sign error, and then it worked, and I sat there staring at the loss curve dropping, feeling like I'd built a small engine with my hands.
+
+The notes I was taking are the chapters of Vecta now. Which is the most honest description of me as a person: a deep reader who takes notes, and whose notes eventually grow legs and walk off the page.
+
+## What I'm building now
+
+Five projects. One through-line: take something unstructured and make it structured, then make the structure understandable to other people.
+
+**[Hermes](/hermes)** is the main one. It unifies World Bank, IMF, GDELT, OpenSanctions, and HDX/CPI into a single SQLite database with one consistent schema, behind one API. It was born out of my own spreadsheet moment, so it has to be good. If I'm the only one who ever uses it, it still has to be good, because the version of me from six years ago deserves the tool I didn't have.
+
+**[Vecta](/vecta)** is the C++17 ML-math library I told you about. Chapter by chapter, from scratch, with tests that actually verify the math instead of just checking that it runs.
+
+**[Aegis](/aegis)** is the real-time layer: FastAPI and Next.js with XGBoost and River, doing risk scoring on live data instead of static dumps.
+
+**[Atlas](/atlas)** and **[Aletheia](/aletheia)** are the next two in the pipeline. They're young, they're documented as they grow, and they're the questions I haven't answered yet.
+
+People ask why five projects instead of one polished thing. It's a fair question, and the honest answer is that they feed each other. Hermes supplies Aegis with clean data. Vecta's implementations inform the ML pieces. Atlas and Aletheia are the next questions, and I can't answer them until the first three are solid. One polished thing would be safer. Five connected things are more useful, and useful is the whole point.
+
+## What's next
+
+Finish all five. That's it. That's the goal, and it's bigger than it sounds.
+
+"Finish" means more than code that runs. It means docs you can learn from. It means schemas other people can build on. It means tests that catch the mistakes I used to make at midnight. Everything here is open source, because that's the only way I know to build things that last beyond one machine and one mood.
+
+There's a version of me who started learning earlier and has it all done. I don't spend much time on him. The version of me that matters is the one that's still going, the one who turns every ugly dataset into something cleaner and every unclear page into something I understand. That's a person I'm proud of, and he's a work in progress by design.
+
+## Outside the code
+
+Mostly reading, and the projects. I'll be honest, there isn't much else right now, and I like it that way.
+
+I read slowly on purpose. Papers, textbooks, long essays, cover to cover, with a notebook next to me. I've learned that speed reading is a great way to feel smart and learn nothing, so I traded it for actual understanding. It compounds. Every dataset I clean makes the next one easier. Every chapter I write makes the next paper easier to read. Every library I rebuild makes every library after it less mysterious.
+
+That compounding is the thing I love most about this work. Nothing is wasted. A broken script from years ago taught me something I still use. A textbook I almost gave up on turned into a project. I trust that pattern now, the slow accumulation of understanding. It's never let me down.
+
+## A last word
+
+If any of this sounds like your kind of problem, reach out. The links are at the bottom of every page. I'm always up for collaborations, feedback on the projects, or just talking shop about data pipelines at odd hours.
+
+Thanks for reading. This was the honest version, and it took a while to write, but I think it was worth it.
