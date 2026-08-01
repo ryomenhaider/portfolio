@@ -1,0 +1,35 @@
+---
+title: "Why I built Hermes: a data layer for country risk"
+description: "Acquiring, validating, normalizing, and serving country risk data is harder than it looks. Hermes is my attempt to make it one clean API."
+date: 2026-07-12
+tags: [data, python, ml]
+---
+
+## The problem
+
+Country risk analysis needs data from many places — World Bank indicators, IMF dataflows, GDELT events, sanctions lists. Every source has its own API, schema, update cadence, and quirks. Fetching a single metric means writing a different integration for every source.
+
+## The idea
+
+One Python SDK that presents every source behind the same shape:
+
+- one connector interface per source
+- canonical schemas for indicator and event data
+- a disk cache with per-source TTLs so you don't burn rate limits
+- ~60 engineered country risk features across five groups
+
+```python
+from hermes import Hermes
+
+hr = Hermes(opensanction_api=...)
+risk = hr.features.get_country_risk_features("UKR")
+print(risk["geopolitical"]["conflict_event_count_30d"])
+```
+
+## What I learned
+
+- **Caching is a feature.** `RawCache` stores Parquet files keyed by request hash — repeated calls became nearly free.
+- **Normalization pays off.** FIPS→ISO3 conversions live in one place instead of leaking into feature code.
+- **Decorators beat manual registries.** The `@feature` decorator builds a lineage graph that resolves dependency tiers for free.
+
+Check out the [Hermes docs](/hermes) for the full walkthrough.

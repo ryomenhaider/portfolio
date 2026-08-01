@@ -1,0 +1,55 @@
+---
+title: CLI
+order: 40
+section: Platform
+description: The typer CLI — run, serve, and ui commands.
+---
+
+The `aiges` command is built with [typer](https://typer.tiangolo.com/).
+
+## `aiges run`
+
+Starts the **backend and frontend together** — the main entry point.
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--host`, `-h` | `127.0.0.1` | Backend bind address |
+| `--backend-port`, `-b` | `8000` | Backend API port |
+| `--frontend-port`, `-f` | `3000` | Next.js port |
+| `--prod` | (dev) | Run Next.js in production mode instead of development |
+
+```bash
+aiges run
+aiges run --host 0.0.0.0 --backend-port 8080 --frontend-port 3100 --prod
+```
+
+The backend runs under uvicorn with `--reload` (excluding `__pycache__*` and `*corrupt*` paths). Both processes start, run, and terminate together on `Ctrl+C`.
+
+## `aiges serve`
+
+Backend API only.
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--host`, `-h` | `127.0.0.1` | Host bind address |
+| `--port`, `-p` | `8000` | Port for the API server |
+
+```bash
+aiges serve
+```
+
+## `aiges ui`
+
+Next.js frontend only.
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--prod`, `-p` | (dev) | Production instead of development |
+| `--port`, `-m` | `3000` | Port for the Next.js server |
+
+```bash
+aiges ui
+aiges ui --prod --port 3100
+```
+
+Fails with an error if the frontend directory (`src/aiges/frontend`) is missing.

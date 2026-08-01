@@ -1,0 +1,39 @@
+---
+title: Development
+order: 50
+section: Project
+description: The uv-based workflow — build, test, and verify.
+---
+
+## Environment
+
+Activate the venv created by `setup_vecta.sh`:
+
+```bash
+source .venv/bin/activate
+```
+
+## Rebuild After C++ Changes
+
+Rebuild + reinstall the Python module after changing C++ code:
+
+```bash
+uv pip install -e . --no-build-isolation
+```
+
+## Python Tests
+
+```bash
+pytest
+```
+
+## C++ Tests
+
+C++ tests live in a separate dev build, not part of the Python wheel. A plain `cmake` invocation doesn't automatically know where pybind11's CMake config lives the way `pip`/`uv pip install` does, so point it there explicitly:
+
+```bash
+PYBIND11_CMAKE_DIR=$(python -c "import pybind11; print(pybind11.get_cmake_dir())")
+cmake -S . -B build-tests -DVECTA_BUILD_TESTS=ON -DCMAKE_PREFIX_PATH="$PYBIND11_CMAKE_DIR"
+cmake --build build-tests
+ctest --test-dir build-tests --output-on-failure
+```

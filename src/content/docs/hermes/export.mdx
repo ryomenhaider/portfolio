@@ -1,0 +1,44 @@
+---
+title: Data Export
+order: 50
+section: Hermes SDK
+description: Export DataFrames and Series to CSV, JSON, or Parquet.
+---
+
+**File:** `hermes/core/export.py`
+
+## What It Does
+
+The `export()` helper writes any `pandas.DataFrame` or `pandas.Series` to disk as CSV, JSON, or Parquet. It creates the target directory if it doesn't exist.
+
+## Signature
+
+```python
+export(
+    data: pd.DataFrame | pd.Series,
+    filetype: str = "csv",
+    loc: Path | str = "data/",
+    name: str | None = None,
+)
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `data` | — | The DataFrame or Series to export. |
+| `filetype` | `"csv"` | One of `"csv"`, `"json"`, `"parquet"`. |
+| `loc` | `"data/"` | Target directory. |
+| `name` | `None` | Output filename (without extension). Defaults to a Unix timestamp. |
+
+## Examples
+
+```python
+from hermes.core.export import export
+
+# Save a country risk snapshot as JSON
+export(data=risk, filetype="json", name="ukr_risk")
+
+# Save a training panel as Parquet
+export(data=panel, filetype="parquet", loc="data/panels/", name="monthly_panel")
+```
+
+> Passing anything other than a DataFrame or Series raises a `TypeError`. Unsupported file types are logged and skipped.

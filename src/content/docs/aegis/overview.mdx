@@ -1,0 +1,47 @@
+---
+title: Overview
+order: 10
+description: Aegis — an end-to-end risk intelligence platform.
+---
+
+**Repo:** [github.com/ryomenhaider/Aegis](https://github.com/ryomenhaider/Aegis)
+
+## What It Is
+
+Aegis is a risk intelligence platform built on top of the [Hermes](/hermes) data layer. It combines a FastAPI backend, Redis-backed caching, ML forecasting, and a Next.js frontend into one runnable application.
+
+## Stack
+
+| Layer | Tech |
+|-------|------|
+| Backend API | FastAPI + uvicorn |
+| ML / forecasting | scikit-learn, xgboost, river (online ML) |
+| Data | pandas, numpy, [hermes-plt](https://pypi.org/project/hermes-plt/) |
+| Cache | Redis |
+| Frontend | Next.js 15 (App Router), React 19, shadcn/ui, Tailwind 4 |
+| Database | Supabase (Postgres) |
+| CLI | typer |
+
+## Frontend Screens
+
+The Next.js app (App Router) ships several intelligence screens:
+
+| Route | Purpose |
+|-------|---------|
+| `/` | Dashboard — stats, risk signals, active alerts, data sources |
+| `/country/[id]` | Country intelligence — search by ISO3 code |
+| `/forecast` | ML forecasting views |
+| `/anomaly` | Anomaly detection views |
+| `/explain` | Model explanation views |
+| `/reports` | Reports |
+| `/agent` | Agent tooling |
+| `/scenarios` | Scenario analysis |
+
+## Quick Start
+
+```bash
+uv sync              # install Python deps
+aiges run            # start backend (8000) + frontend (3000)
+```
+
+Requires Python >= 3.11 and Node.js for the frontend. See [CLI](/aegis/cli) for all commands.

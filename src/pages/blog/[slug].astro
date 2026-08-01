@@ -1,0 +1,57 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts
+    .filter((p) => !p.data.draft)
+    .map((post) => ({
+      params: { slug: post.id.split('/').pop()! },
+      props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<BaseLayout
+  title={`${post.data.title} — Haider Ali`}
+  description={post.data.description}
+  path={`/blog/${post.id.split('/').pop()}`}
+>
+  <main class="home-body min-h-screen">
+    <article class="max-w-3xl mx-auto px-4 py-16">
+      <a href="/blog" class="font-mono text-sm text-white/40 hover:text-[#a78bfa] transition-colors">
+        ← all posts
+      </a>
+      <header class="mt-8 mb-10">
+        <div class="font-mono text-sm text-white/40 mb-3">
+          {fmt.format(post.data.date)}
+          {post.data.tags.length > 0 && (
+            <span class="ml-3 text-[#a78bfa]">
+              {post.data.tags.map((t) => `#${t}`).join(' ')}
+            </span>
+          )}
+        </div>
+        <h1 class="font-black tracking-tighter text-4xl sm:text-5xl leading-tight">
+          {post.data.title}
+        </h1>
+        <p class="mt-4 text-white/60 text-lg leading-relaxed">{post.data.description}</p>
+      </header>
+      <div class="doc-content">
+        <Content />
+      </div>
+      <footer class="mt-16 pt-6 border-t border-white/10 flex justify-between font-mono text-sm">
+        <a href="/blog" class="text-white/40 hover:text-[#a78bfa] transition-colors">
+          ← all posts
+        </a>
+        <a href="/" class="text-white/40 hover:text-[#a78bfa] transition-colors">
+          home ↑
+        </a>
+      </footer>
+    </article>
+  </main>
+</BaseLayout>

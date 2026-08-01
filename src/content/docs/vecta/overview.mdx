@@ -1,0 +1,24 @@
+---
+title: Overview
+order: 10
+description: Vecta — a computational maths library for ML, built from scratch in C++17 with Python bindings.
+---
+
+**Repo:** [github.com/ryomenhaider/Vecta](https://github.com/ryomenhaider/Vecta)
+
+## What It Is
+
+Vecta is a computational maths library for ML, built from scratch in C++ with Python bindings, structured chapter-by-chapter after [*Mathematics for Machine Learning*](https://mml-book.github.io/) (Deisenroth, Faisal, Ong).
+
+## Stack
+
+- C++17 core — no external maths dependencies, everything implemented from scratch
+- [pybind11](https://github.com/pybind/pybind11) for Python bindings
+- [scikit-build-core](https://github.com/scikit-build/scikit-build-core) + CMake for packaging
+- [uv](https://docs.astral.sh/uv/) for the Python venv and all package installs (no pip commands)
+- [Catch2](https://github.com/catchorg/Catch2) for C++ unit tests
+- [pytest](https://docs.pytest.org/) for Python-level tests
+
+## Status
+
+The project follows the book's chapters, each with a "stub → real implementation" lifecycle. See the [Chapters](/vecta/chapters) page for the current status table.

@@ -1,0 +1,67 @@
+---
+title: Hermes Class
+order: 20
+section: Hermes SDK
+description: The Hermes facade — constructor, attributes, and methods.
+---
+
+**File:** `hermes/__init__.py`
+
+## What It Does
+
+The `Hermes` class is the main entry point of the SDK. It composes every connector and the feature pipeline into a single object, so all functionality is reachable through one import:
+
+```python
+from hermes import Hermes
+```
+
+## Constructor
+
+```python
+Hermes(
+    opensanction_api: str,
+    cache_dir: str | None = None,
+    use_cache: bool = True,
+)
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `opensanction_api` | — | OpenSanctions API key. Required; raises `KeyError` if empty. |
+| `cache_dir` | `~/.hermes_cache/raw` | Directory for the raw Parquet cache. |
+| `use_cache` | `True` | Set to `False` to disable caching entirely. |
+
+## Attributes
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `hr.features` | `pipeline` | Country risk pipeline — snapshots and training panels. |
+| `hr.lf` | `features` | Feature registry — access every feature function. |
+| `hr.list_features` | `list` | All ~60 feature functions, ready to call. |
+| `hr.list_countries` | `list[str]` | All supported ISO3 country codes. |
+| `hr.world_bank` | `World_bank` | World Bank connector. |
+| `hr.imf` | `IMF` | IMF SDMX connector. |
+| `hr.gdelt` | `GDELT` | GDELT events connector. |
+| `hr.opensanction` | `OpenSanction` | OpenSanctions connector. |
+
+## Methods
+
+### `clear_cache(older_than: str | None = None)`
+
+Deletes cached Parquet files. Pass a duration string like `"24h"`, `"7d"`, or `"2w"` to only remove entries older than that.
+
+```python
+hr.clear_cache()                 # wipe everything
+hr.clear_cache(older_than="7d") # only entries older than 7 days
+```
+
+### `cache_stats() → dict`
+
+Returns cache usage: total files, files per source, hits, misses, and hit rate per source.
+
+```python
+stats = hr.cache_stats()
+# {"total_files": 42, "by_source": {...}, "hits": {...}, "misses": {...}, "hit_rate": {...}}
+```
+
+When caching is disabled, returns an empty stats dict.

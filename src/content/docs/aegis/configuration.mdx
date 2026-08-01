@@ -1,0 +1,35 @@
+---
+title: Configuration
+order: 50
+section: Platform
+description: Environment variables and keys required by Aegis.
+---
+
+## Backend Environment
+
+The backend loads a `.env` file at `src/aiges/config.py` via `dotenv`:
+
+| Variable | Required | Used for |
+|----------|----------|----------|
+| `NEWS_DATA_API` | yes | News API key, passed into the Hermes facade |
+| `OPEN_SANCTIONS_API` | yes | OpenSanctions key (via Hermes) |
+
+> The `Hermes` facade raises `KeyError` without the OpenSanctions key, and the country routes need `NEWS_DATA_API` — set both before running.
+
+```bash
+# in src/aiges/
+echo "NEWS_DATA_API=your_key" >> .env
+```
+
+## Frontend Environment
+
+The Next.js app reads public env vars from `src/aiges/frontend/.env.local`:
+
+| Variable | Used for |
+|----------|----------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase publishable (anon) key |
+
+## Hermes Cache
+
+Country feature calls use a local Parquet cache at `src/aiges/backend/hermes_cache` (set in `routes/country.py`) — no extra setup needed, but it persists between runs.

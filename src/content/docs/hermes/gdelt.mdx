@@ -1,0 +1,65 @@
+---
+title: GDELT
+order: 80
+section: Connectors
+description: Query the GDELT global event database for conflict, protest, and diplomacy events.
+---
+
+**File:** `hermes/sources/gdelt.py`
+
+## What It Does
+
+Queries the [GDELT](https://www.gdeltproject.org/) global event database — conflict, protest, diplomacy, and sanctions events extracted from news worldwide. No authentication required.
+
+Supports two fetch paths: the **Doc API** (lightweight article queries by country and theme) and **daily exports** (full event files, used internally for ML mode history).
+
+## Usage
+
+```python
+from hermes import Hermes
+from datetime import datetime, timedelta
+
+hr = Hermes(opensanction_api=...)
+
+# Conflict events for Ukraine over the last 30 days
+events = hr.gdelt.query_events(
+    countries=["UKR"],
+    themes=["CONFLICT"],
+    start_date=datetime.utcnow() - timedelta(days=30),
+    end_date=datetime.utcnow(),
+)
+```
+
+### `query_events(countries=None, themes=None, start_date=None, end_date=None, normalize=True, force=False) → DataFrame`
+
+- `countries` — list of ISO3 codes (converted to FIPS internally)
+- `themes` — event themes; each maps to GKG theme codes:
+
+| Theme | Mapped GKG themes |
+|-------|-------------------|
+| `"PROTEST"` | PROTEST, Riot, RiotProtect, ... |
+| `"CONFLICT"` | CONFLICT, Military, Assault, Fight, ... |
+| `"DIPLOMACY"` | DIPLOMACY, Agree, Endorse, ... |
+| `"SANCTIONS"` | Sanction, Embargo |
+
+- `start_date` / `end_date` — datetime bounds
+- `normalize` — map to the canonical event schema (default `True`)
+- `force` — bypass the cache
+
+## Canonical Output Columns
+
+| Column | Description |
+|--------|-------------|
+| `event_id` | Global event ID |
+| `date` | Event timestamp |
+| `country_iso3` | ISO3 country code (from FIPS) |
+| `event_type` | Classified type: protest / conflict / diplomacy / sanction / ... |
+| `severity` | Tone or Goldstein scale value |
+| `lat` / `lon` | Event coordinates |
+| `source` | Always `"gdelt"` |
+
+## Behavior
+
+- Responses are cached with a **6-hour TTL**.
+- When `normalize=False`, raw Doc API / export columns are returned.
+- Export downloads are capped in file count and parallelized with a thread pool.

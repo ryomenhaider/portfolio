@@ -1,0 +1,209 @@
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/jetbrains-mono";
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
+  --color-ink: #0a0a0f;
+  --color-accent: #a78bfa;
+}
+
+html {
+  font-family: var(--font-display);
+  background: #0a0a0f;
+  color: #ffffff;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #0a0a0f;
+  color: #ffffff;
+}
+
+::selection {
+  background: #a78bfa;
+  color: #000;
+}
+
+pre,
+code {
+  font-family: var(--font-mono);
+}
+
+/* ---------- doc pages (dark, matches portfolio) ---------- */
+.doc-content {
+  font-family: var(--font-mono);
+  color: rgb(255 255 255 / 0.85);
+}
+
+.doc-content h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 1.5rem 0 0.75rem;
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.doc-content h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 1.5rem 0 0.5rem;
+  border-bottom: 1px solid rgb(255 255 255 / 0.15);
+  padding-bottom: 0.3rem;
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+.doc-content h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 1.25rem 0 0.25rem;
+  font-family: var(--font-display);
+  color: #fff;
+}
+
+.doc-content p {
+  margin: 0.5rem 0;
+  line-height: 1.7;
+}
+
+.doc-content ul,
+.doc-content ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.doc-content li {
+  margin: 0.25rem 0;
+  line-height: 1.7;
+}
+
+.doc-content a {
+  color: #c4b5fd;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.doc-content a:hover {
+  color: #a78bfa;
+}
+
+.doc-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+}
+
+.doc-content th,
+.doc-content td {
+  border: 1px solid rgb(255 255 255 / 0.2);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.doc-content th {
+  background: rgb(255 255 255 / 0.06);
+  font-weight: 600;
+  color: #fff;
+}
+
+.doc-content blockquote {
+  border-left: 3px solid #a78bfa;
+  margin: 0.75rem 0;
+  padding: 0.5rem 1rem;
+  background: rgb(167 139 250 / 0.08);
+  color: rgb(255 255 255 / 0.75);
+}
+
+.doc-content pre {
+  background: #12121a;
+  border: 1px solid rgb(255 255 255 / 0.15);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 0.75rem 0;
+}
+
+.doc-content code {
+  background: rgb(255 255 255 / 0.08);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  color: #e9d5ff;
+}
+
+.doc-content pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.doc-content hr {
+  border: none;
+  border-top: 1px solid rgb(255 255 255 / 0.12);
+}
+
+/* ---------- portfolio home (dark, modern) ---------- */
+.home-body {
+  background: var(--color-ink);
+  color: #fff;
+  font-family: var(--font-display);
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 55%, transparent 100%);
+}
+
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.25; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 9s ease-in-out infinite;
+}
+
+.animate-pulse-slow-alt {
+  animation: pulse-slow 13s ease-in-out infinite reverse;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  animation: fade-up 0.7s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.text-shimmer {
+  background: linear-gradient(110deg, #fff 30%, #a78bfa 50%, #fff 70%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
+}

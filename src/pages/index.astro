@@ -1,0 +1,348 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { projects, socials } from '../config/projects';
+
+const tech: Record<string, string[]> = {
+  hermes: ['Python', 'pandas', 'World Bank', 'IMF', 'GDELT', 'OpenSanctions'],
+  aegis: ['FastAPI', 'Next.js', 'Redis', 'XGBoost', 'River'],
+  atlas: ['TBD'],
+  aletheia: ['Python', 'NumPy', 'pandas'],
+  vecta: ['C++17', 'pybind11', 'CMake', 'Catch2'],
+};
+
+const stats = [
+  { value: '5', label: 'open-source projects' },
+  { value: '27', label: 'documentation pages' },
+  { value: '4', label: 'stacks, one focus' },
+];
+
+const skills = [
+  {
+    category: 'Languages',
+    items: ['Python', 'C++17', 'TypeScript', 'JavaScript', 'SQL'],
+  },
+  {
+    category: 'Data & ML',
+    items: ['pandas', 'NumPy', 'scikit-learn', 'XGBoost', 'River'],
+  },
+  {
+    category: 'Backend',
+    items: ['FastAPI', 'Redis', 'Supabase', 'REST APIs'],
+  },
+  {
+    category: 'Frontend',
+    items: ['Next.js', 'React', 'Tailwind CSS', 'Astro'],
+  },
+  {
+    category: 'Tooling',
+    items: ['uv', 'CMake', 'pybind11', 'pytest', 'Git'],
+  },
+  {
+    category: 'Data Sources',
+    items: ['World Bank', 'IMF SDMX', 'GDELT', 'OpenSanctions', 'HDX'],
+  },
+];
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+<BaseLayout title="Haider Ali — Portfolio" path="/" description="Data platforms, ML tooling, and computational infrastructure built from scratch.">
+  <main class="home-body min-h-screen">
+    <!-- HERO -->
+    <section class="relative overflow-hidden">
+      <div class="hero-grid absolute inset-0" />
+      <div class="absolute -top-40 left-1/4 h-96 w-96 rounded-full bg-violet-600/30 blur-[110px] animate-pulse-slow" />
+      <div class="absolute top-48 right-1/5 h-80 w-80 rounded-full bg-cyan-500/20 blur-[110px] animate-pulse-slow-alt" />
+
+      <div class="relative max-w-6xl mx-auto px-4 pt-20 pb-16 lg:pt-28 lg:pb-24 grid lg:grid-cols-[1.2fr_1fr] gap-12 items-center">
+        <div>
+          <p class="reveal font-mono text-sm text-[#a78bfa] tracking-widest mb-5">
+            $ whoami — software engineer
+          </p>
+          <h1 class="reveal font-black tracking-tighter leading-[0.95] text-6xl sm:text-7xl lg:text-8xl">
+            HAIDER<br /><span class="text-shimmer">ALI</span>
+          </h1>
+          <p class="reveal mt-7 text-lg text-white/70 max-w-xl leading-relaxed">
+            I build <span class="text-white font-semibold">data platforms</span>,
+            <span class="text-white font-semibold">ML tooling</span>, and
+            <span class="text-white font-semibold">computational infrastructure</span> —
+            from country-risk pipelines to from-scratch math libraries in C++.
+          </p>
+          <div class="reveal mt-9 flex flex-wrap gap-3">
+            <a
+              href="#projects"
+              class="px-6 py-3 bg-white text-black font-bold rounded-lg hover:bg-[#a78bfa] hover:text-black transition-colors"
+            >
+              View projects ↓
+            </a>
+            <a
+              href={socials.github}
+              target="_blank"
+              class="px-6 py-3 border border-white/25 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+            >
+              GitHub ↗
+            </a>
+          </div>
+          <div class="reveal mt-8 flex items-center gap-4">
+            <a
+              href={socials.linkedin}
+              target="_blank"
+              aria-label="LinkedIn"
+              class="h-10 w-10 flex items-center justify-center rounded-lg border border-white/20 text-white/70 hover:text-white hover:border-[#a78bfa] hover:bg-[#a78bfa]/10 transition-colors"
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+                <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z" />
+              </svg>
+            </a>
+            <a
+              href={socials.x}
+              target="_blank"
+              aria-label="X (Twitter)"
+              class="h-10 w-10 flex items-center justify-center rounded-lg border border-white/20 text-white/70 hover:text-white hover:border-[#a78bfa] hover:bg-[#a78bfa]/10 transition-colors"
+            >
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                <path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.47l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.49 3.24H4.3l13.31 17.41z" />
+              </svg>
+            </a>
+            <a
+              href={socials.github}
+              target="_blank"
+              aria-label="GitHub"
+              class="h-10 w-10 flex items-center justify-center rounded-lg border border-white/20 text-white/70 hover:text-white hover:border-[#a78bfa] hover:bg-[#a78bfa]/10 transition-colors"
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+                <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.17-.02-2.12-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.53-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11.04 11.04 0 0 1 2.89-.39c.98 0 1.97.13 2.89.39 2.2-1.49 3.16-1.18 3.16-1.18.63 1.59.23 2.76.12 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.05.77 2.12 0 1.53-.01 2.76-.01 3.14 0 .31.21.68.8.56A11.52 11.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Terminal card -->
+        <div class="reveal hidden sm:block rounded-xl border border-white/15 bg-[#0e0e18]/80 backdrop-blur font-mono text-sm shadow-2xl overflow-hidden" style="animation-delay: 0.15s">
+          <div class="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-white/5">
+            <span class="h-3 w-3 rounded-full bg-red-400/80" />
+            <span class="h-3 w-3 rounded-full bg-yellow-400/80" />
+            <span class="h-3 w-3 rounded-full bg-green-400/80" />
+            <span class="ml-2 text-white/40 text-xs">haiderali@dev ~</span>
+          </div>
+          <div class="p-5 space-y-2 text-white/80">
+            <div><span class="text-emerald-400">$</span> ls projects/</div>
+            <div class="text-[#a78bfa]">hermes&nbsp;&nbsp;aegis&nbsp;&nbsp;vecta&nbsp;&nbsp;atlas&nbsp;&nbsp;aletheia</div>
+            <div><span class="text-emerald-400">$</span> hermes --features</div>
+            <div class="text-white/60">58 country risk features · 5 dimensions · 5 data sources</div>
+            <div><span class="text-emerald-400">$</span> vecta --status</div>
+            <div class="text-white/60">10 chapters · C++17 · pybind11</div>
+            <div>
+              <span class="text-emerald-400">$</span> <span class="inline-block w-2.5 h-4 bg-[#a78bfa] align-middle animate-blink" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="border-y border-white/10 bg-white/[0.02]">
+      <div class="max-w-6xl mx-auto px-4 py-10 grid grid-cols-3 gap-6 text-center">
+        {stats.map((s) => (
+          <div>
+            <div class="font-black text-4xl sm:text-5xl text-white">{s.value}</div>
+            <div class="mt-1.5 text-[11px] uppercase tracking-[0.2em] text-white/40">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="max-w-6xl mx-auto px-4 py-20 lg:py-28 scroll-mt-16">
+      <div class="grid lg:grid-cols-[1fr_1.4fr] gap-10 items-start">
+        <div>
+          <p class="font-mono text-sm text-[#a78bfa] mb-2">// about</p>
+          <h2 class="font-black text-3xl sm:text-4xl tracking-tight">BUILT FROM<br />SCRATCH, SHIPPED<br />FOR REAL.</h2>
+        </div>
+        <div class="space-y-4 text-white/70 leading-relaxed">
+          <p>
+            I'm a software engineer who likes going deep: pulling data from messy external
+            sources, engineering features from raw signals, and reimplementing the math that
+            powers ML so it's actually understood.
+          </p>
+          <p>
+            My projects range from <a href="/hermes" class="text-[#a78bfa] underline underline-offset-2 hover:text-white transition-colors">Hermes</a>, a country-risk data platform that unifies five public data sources behind one API, to
+            <a href="/vecta" class="text-[#a78bfa] underline underline-offset-2 hover:text-white transition-colors">Vecta</a>, a C++17 library that rebuilds ML math chapter-by-chapter with zero external
+            dependencies.
+          </p>
+          <p>
+            Everything I build is open source and documented — because a tool nobody can
+            understand or reuse isn't a tool at all.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="border-y border-white/10 bg-white/[0.02]">
+      <div class="max-w-6xl mx-auto px-4 py-20 lg:py-24">
+        <p class="font-mono text-sm text-[#a78bfa] mb-2">// stack</p>
+        <h2 class="font-black text-3xl sm:text-4xl tracking-tight mb-10">TOOLS & STACK</h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {skills.map((group) => (
+            <div class="rounded-xl border border-white/10 bg-[#0e0e15] p-5">
+              <div class="text-sm font-bold uppercase tracking-widest text-[#a78bfa] mb-3">
+                {group.category}
+              </div>
+              <div class="flex flex-wrap gap-2">
+                {group.items.map((item) => (
+                  <span class="font-mono text-xs px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-white/70">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="max-w-6xl mx-auto px-4 py-20 lg:py-28 scroll-mt-16">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-10">
+        <div>
+          <p class="font-mono text-sm text-[#a78bfa] mb-2">// projects</p>
+          <h2 class="font-black text-3xl sm:text-4xl tracking-tight">WHAT I'M BUILDING</h2>
+        </div>
+        <a
+          href={socials.github}
+          target="_blank"
+          class="text-sm text-white/50 hover:text-white font-mono"
+        >
+          github.com/ryomenhaider ↗
+        </a>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-5">
+        {projects.map((p, i) => (
+          <a
+            href={`/${p.slug}`}
+            class="group relative rounded-xl border border-white/10 bg-white/[0.03] p-6 flex flex-col gap-4 transition-all duration-300 hover:border-[#a78bfa]/60 hover:bg-white/[0.06] hover:-translate-y-1"
+            style={`animation-delay: ${i * 0.08}s`}
+          >
+            <div
+              class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+              style="background: radial-gradient(400px circle at 50% 0%, rgba(167,139,250,0.14), transparent 60%)"
+            />
+            <div class="relative flex items-center justify-between gap-3">
+              <span class="text-2xl font-black tracking-tight group-hover:text-[#a78bfa] transition-colors">
+                {p.name}
+              </span>
+              <span
+                class:list={[
+                  'text-[10px] px-2.5 py-1 rounded-full border font-mono uppercase tracking-widest',
+                  p.status === 'active'
+                    ? 'text-emerald-300 border-emerald-400/40 bg-emerald-400/10'
+                    : 'text-amber-300 border-amber-400/40 bg-amber-400/10',
+                ]}
+              >
+                {p.status}
+              </span>
+            </div>
+            <div class="relative text-[13px] uppercase tracking-[0.25em] text-[#a78bfa]">
+              {p.tagline}
+            </div>
+            <p class="relative text-sm text-white/60 leading-relaxed">{p.description}</p>
+            <div class="relative flex flex-wrap gap-2">
+              {tech[p.slug]?.map((t) => (
+                <span class="font-mono text-[11px] px-2 py-1 rounded-md bg-white/5 border border-white/10 text-white/60">
+                  {t}
+                </span>
+              ))}
+            </div>
+            <div class="relative mt-1 flex items-center justify-between">
+              <span class="text-sm font-semibold text-white/80 group-hover:text-white transition-colors">
+                Read the docs
+              </span>
+              <span class="transition-transform duration-300 group-hover:translate-x-1.5 text-[#a78bfa]">
+                →
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- BLOG -->
+    <section id="blog" class="border-t border-white/10 bg-white/[0.02]">
+      <div class="max-w-6xl mx-auto px-4 py-20 lg:py-24">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-10">
+          <div>
+            <p class="font-mono text-sm text-[#a78bfa] mb-2">// blog</p>
+            <h2 class="font-black text-3xl sm:text-4xl tracking-tight">LATEST WRITING</h2>
+          </div>
+          <a href="/blog" class="text-sm text-white/50 hover:text-white font-mono">
+            all posts ↗
+          </a>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-5">
+          {posts.map((post) => (
+            <a
+              href={`/blog/${post.id.split('/').pop()}`}
+              class="group rounded-xl border border-white/10 bg-[#0e0e15] p-6 flex flex-col gap-3 transition-all duration-300 hover:border-[#a78bfa]/60 hover:-translate-y-1"
+            >
+              <div class="font-mono text-xs text-white/40">
+                {fmt.format(post.data.date)}
+              </div>
+              <h3 class="text-lg font-bold tracking-tight group-hover:text-[#a78bfa] transition-colors leading-snug">
+                {post.data.title}
+              </h3>
+              <p class="text-sm text-white/60 leading-relaxed flex-1">{post.data.description}</p>
+              <div class="flex flex-wrap gap-2 mt-1">
+                {post.data.tags.map((t) => (
+                  <span class="font-mono text-[11px] px-2 py-0.5 rounded-md bg-[#a78bfa]/10 border border-[#a78bfa]/25 text-[#c4b5fd]">
+                    #{t}
+                  </span>
+                ))}
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="max-w-6xl mx-auto px-4 py-20 lg:py-28 text-center">
+      <p class="font-mono text-sm text-[#a78bfa] mb-3">// contact</p>
+      <h2 class="font-black tracking-tighter text-4xl sm:text-5xl">LET'S TALK</h2>
+      <p class="mt-5 text-white/60 max-w-md mx-auto leading-relaxed">
+        Open to collaborations, interesting problems, and feedback on the projects.
+      </p>
+      <div class="mt-9 flex items-center justify-center gap-4">
+        <a
+          href={socials.linkedin}
+          target="_blank"
+          class="px-6 py-3 bg-white text-black font-bold rounded-lg hover:bg-[#a78bfa] hover:text-black transition-colors"
+        >
+          LinkedIn ↗
+        </a>
+        <a
+          href={socials.x}
+          target="_blank"
+          class="px-6 py-3 border border-white/25 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+        >
+          X / Twitter ↗
+        </a>
+        <a
+          href={socials.github}
+          target="_blank"
+          class="px-6 py-3 border border-white/25 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+        >
+          GitHub ↗
+        </a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

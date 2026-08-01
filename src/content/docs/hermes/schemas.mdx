@@ -1,0 +1,59 @@
+---
+title: Canonical Schemas
+order: 110
+section: Hermes SDK
+description: The standard column shapes returned by connectors, features, and panels.
+---
+
+## Connector Output
+
+Every indicator-based connector (World Bank, IMF) returns the same core shape, so feature functions can rely on a stable contract:
+
+| Column | Type | Example |
+|--------|------|---------|
+| `date` | string | `"2023"` |
+| `indicator_id` | string | `"NY.GDP.MKTP.KD.ZG"` |
+| `country` | string | `"USA"` |
+| `value` | float | `2.1` |
+| `source` | string | `"World_Bank"` / `"IMF"` |
+
+## GDELT Event Schema
+
+Event-based connectors (GDELT) normalize to a different schema — one row per event, with no fixed frequency:
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `event_id` | string | Global event ID |
+| `date` | datetime | Event timestamp |
+| `country_iso3` | string | ISO3 country code |
+| `event_type` | string | protest / conflict / diplomacy / sanction / ... |
+| `severity` | float | Tone or Goldstein scale |
+| `lat`, `lon` | float | Coordinates |
+| `source` | string | Always `"gdelt"` |
+
+## Feature Output
+
+Feature functions return one of two shapes, selected by the `mode` argument:
+
+- `mode="F"` — a single `float` / `int` (latest snapshot), or `NaN` when no data exists
+- `mode="ML"` — a `pd.Series` indexed monthly, empty when no data exists
+
+## Risk Snapshot Schema
+
+`get_country_risk_features()` returns a nested dict:
+
+```json
+{
+    "country": "UKR",
+    "economic":     { "gdp_growth_yoy": 3.2, ... },
+    "geopolitical": { "conflict_event_count_30d": 47, ... },
+    "security":     { "military_spending_gdp": 4.1, ... },
+    "social":       { "human_development_index": 0.73, ... },
+    "environmental":{ "climate_vulnerability_score": 0.62, ... },
+    "metadata":     { "last_updated": "...", "features_version": "1.0.0" }
+}
+```
+
+## Training Panel Schema
+
+`build_training_panel()` returns a DataFrame with a `(country_iso3, date)` MultiIndex and one column per feature.

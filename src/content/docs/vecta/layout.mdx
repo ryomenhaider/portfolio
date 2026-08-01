@@ -1,0 +1,23 @@
+---
+title: Layout
+order: 20
+section: Project
+description: How the repo is organized — one folder set per book chapter.
+---
+
+Each chapter gets matching folders across headers, sources, bindings, the Python package, and both test suites:
+
+```
+include/vecta/<chapter>/      C++ headers
+src/<chapter>/                C++ implementation
+bindings/<chapter>_bindings.cpp   pybind11 binding code for that chapter
+python/vecta/<chapter>/       Python package wrapper
+tests/cpp/<chapter>/          Catch2 tests
+tests/python/<chapter>/       pytest tests
+```
+
+`examples/` is free scratch space for worked examples from the book.
+
+## How It Stays Green
+
+Every chapter folder — even stubs — compiles, links, imports from Python, and has a smoke test. The whole pipeline stays green as you go; replace `placeholder()` with real content in the header/source/bindings/tests for a chapter as you study it.

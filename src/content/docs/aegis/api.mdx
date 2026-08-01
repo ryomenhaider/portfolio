@@ -1,0 +1,65 @@
+---
+title: API
+order: 30
+section: Platform
+description: The FastAPI endpoints exposed by the Aegis backend.
+---
+
+## Base
+
+The API is served by uvicorn on port `8000` (configurable). CORS is enabled for `http://localhost:3000`.
+
+## Endpoints
+
+### `GET /health`
+
+Service health probe.
+
+```json
+{ "status": "ok" }
+```
+
+### `GET /aiges`
+
+Platform root — echoes the API name and health status.
+
+```json
+{ "api": "aiges", "health": { "status": "ok", "version": "0.1.0" } }
+```
+
+### `GET /aiges/health`
+
+Health with version info.
+
+```json
+{ "status": "ok", "version": "0.1.0" }
+```
+
+### `GET /country/{code}`
+
+Country risk features for an ISO3 code, computed through the `Hermes` facade (from `hermes-plt`).
+
+```python
+import requests
+
+resp = requests.get("http://127.0.0.1:8000/country/UKR")
+features = resp.json()  # country risk feature dict
+```
+
+Internally the route builds a `Hermes` instance pointed at a local cache dir (`src/aiges/backend/hermes_cache`) and calls the feature pipeline for the requested code.
+
+> The OpenSanctions key and `NEWS_DATA_API` are read from the environment at import time — see [Configuration](/aegis/configuration).
+
+## Starting the API
+
+```bash
+aiges serve --host 0.0.0.0 --port 8000
+```
+
+or via the full platform:
+
+```bash
+aiges run
+```
+
+Interactive docs are available at `http://127.0.0.1:8000/docs` (FastAPI Swagger UI).

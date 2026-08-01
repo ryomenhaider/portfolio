@@ -1,0 +1,111 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  slug: string;
+  docs: CollectionEntry<'docs'>[];
+  current: string;
+}
+
+const { slug, docs } = Astro.props;
+
+interface NavItem {
+  label: string;
+  anchor: string;
+  order: number;
+  section: string | null;
+}
+
+const items = docs.map((d) => ({
+  label: d.data.title,
+  anchor: d.id.split('/').pop()!,
+  order: d.data.order,
+  section: d.data.section ?? null,
+}));
+
+const topItems = items.filter((i) => !i.section).sort((a, b) => a.order - b.order);
+const sections = new Map<string, NavItem[]>();
+for (const item of items) {
+  if (!item.section) continue;
+  if (!sections.has(item.section)) sections.set(item.section, []);
+  sections.get(item.section)!.push(item);
+}
+const sectionEntries = [...sections.entries()].map(([name, list]) => [
+  name,
+  list.sort((a, b) => a.order - b.order),
+] as const);
+
+const allItems = [...topItems, ...sectionEntries.flatMap(([, list]) => list)];
+---
+
+<aside class="w-64 min-w-64 border-r border-white/10 h-full overflow-y-auto bg-[#0e0e15]">
+  <nav class="py-3 px-2">
+    {topItems.map((item) => (
+      <a
+        href={`/${slug}#${item.anchor}`}
+        data-spy={item.anchor}
+        class="sidebar-link block px-3 py-1.5 text-sm font-medium border-l-2 rounded-r-md transition-colors"
+      >
+        {item.label}
+      </a>
+    ))}
+    {sectionEntries.map(([section, list]) => (
+      <div class="mt-4">
+        <div class="px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white/35">
+          {section}
+        </div>
+        {list.map((item) => (
+          <a
+            href={`/${slug}#${item.anchor}`}
+            data-spy={item.anchor}
+            class="sidebar-link block px-3 py-1.5 text-sm font-medium border-l-2 rounded-r-md transition-colors"
+          >
+            {item.label}
+          </a>
+        ))}
+      </div>
+    ))}
+  </nav>
+</aside>
+
+<script>
+  const links = document.querySelectorAll<HTMLAnchorElement>('[data-spy]');
+  const targets = [...links]
+    .map((l) => document.getElementById(l.dataset.spy!))
+    .filter((el): el is HTMLElement => el !== null);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((e) => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (visible.length === 0) return;
+      const active = visible[0].target.id;
+      links.forEach((l) => {
+        const on = l.dataset.spy === active;
+        l.classList.toggle('sidebar-link-active', on);
+        l.setAttribute('aria-current', on ? 'true' : 'false');
+      });
+    },
+    { rootMargin: '-15% 0px -75% 0px', threshold: 0 }
+  );
+
+  targets.forEach((t) => observer.observe(t));
+</script>
+
+<style>
+  .sidebar-link {
+    color: rgb(255 255 255 / 0.6);
+    border-color: transparent;
+  }
+  .sidebar-link:hover {
+    color: #fff;
+    background: rgb(255 255 255 / 0.06);
+  }
+  .sidebar-link-active {
+    color: #c4b5fd;
+    border-color: #a78bfa;
+    background: rgb(167 139 250 / 0.12);
+    font-weight: 600;
+  }
+</style>

@@ -1,0 +1,33 @@
+---
+title: Adding Real Content
+order: 40
+section: Project
+description: How to promote a stub chapter to a real implementation.
+---
+
+## Steps
+
+1. Write the real implementation in `include/vecta/<chapter>/<chapter>.hpp` (and `.cpp` if needed).
+2. Expose it to Python in `bindings/<chapter>_bindings.cpp`.
+3. Delete the `placeholder()` smoke tests in `tests/cpp/<chapter>/` and `tests/python/<chapter>/`, replacing them with real tests.
+4. CMake picks up new `.cpp` files automatically on the next build (globbing with `CONFIGURE_DEPENDS`) — no need to edit `CMakeLists.txt`.
+
+## Example
+
+After implementing `linear_algebra` vectors, the pipeline is:
+
+```cpp
+// include/vecta/linear_algebra/linear_algebra.hpp
+#pragma once
+namespace vecta {
+// real vector implementation here
+}
+```
+
+```cpp
+// bindings/linear_algebra_bindings.cpp
+#include <pybind11/pybind11.h>
+// py::class_<...> bindings here
+```
+
+Then rebuild and run both test suites (see [Development](/vecta/development)).

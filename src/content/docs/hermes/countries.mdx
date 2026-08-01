@@ -1,0 +1,43 @@
+---
+title: Country Data
+order: 40
+section: Hermes SDK
+description: Supported ISO 3166-1 alpha-3 country codes and validation.
+---
+
+**File:** `hermes/core/countries.py`
+
+## What It Does
+
+Defines the `countries` list — every ISO 3166-1 alpha-3 country code the SDK supports. Connectors and feature functions expect these three-letter codes (e.g. `"USA"`, `"UKR"`, `"DEU"`).
+
+## Usage
+
+```python
+from hermes import Hermes
+
+hr = Hermes(opensanction_api=...)
+
+# Full list of supported codes
+print(hr.list_countries)
+# ['AFG', 'ALA', 'ALB', 'DZA', 'ASM', ...]
+
+# Iterate countries to build panels or batch snapshots
+for code in hr.list_countries:
+    print(code)
+```
+
+## Validation
+
+Feature functions validate country codes with `pycountry` and raise a `RuntimeError` for invalid ISO3 codes:
+
+```python
+# Raises: RuntimeError("The XYZ is not iso3")
+hr.features.get_country_risk_features("XYZ")
+```
+
+## Notes
+
+- The list covers roughly 240 codes, including territories and dependencies.
+- Coverage varies per connector — some indicators are not available for every territory.
+- Connectors handle the ISO3 → ISO2 / FIPS conversions internally where needed.

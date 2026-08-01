@@ -1,0 +1,52 @@
+---
+title: World Bank
+order: 60
+section: Connectors
+description: Fetch indicator time series from the World Bank Indicators API.
+---
+
+**File:** `hermes/sources/world_bank.py`
+
+## What It Does
+
+Fetches indicator time series from the World Bank Indicators API — GDP, inflation, unemployment, governance, debt, and hundreds more. No authentication required.
+
+**API:** [api.worldbank.org/v2](https://api.worldbank.org/v2)
+
+## Usage
+
+```python
+from hermes import Hermes
+
+hr = Hermes(opensanction_api=...)
+
+# GDP growth (annual %)
+df = hr.world_bank.fetch(
+    country_code="USA",
+    indicator_code="NY.GDP.MKTP.KD.ZG",
+)
+```
+
+### `fetch(country_code, indicator_code, frequency=None, most_recent=None, per_page=1000, page=1, force=False) → DataFrame`
+
+- `country_code` — ISO3 code, e.g. `"USA"`
+- `indicator_code` — World Bank indicator ID, e.g. `"FP.CPI.TOTL.ZG"`
+- `frequency` + `most_recent` — optional: request a specific frequency (`"Y"`/`"M"`/`"Q"`) with `mrv`
+- `force` — bypass the cache and refresh from the API
+
+## Output Columns
+
+| Column | Description |
+|--------|-------------|
+| `date` | Observation period (e.g. `"2023"`) |
+| `indicator_id` | Indicator code |
+| `indicator_name` | Human-readable indicator name |
+| `country` | ISO3 country code |
+| `value` | The observation value |
+| `source` | Always `"World_Bank"` |
+
+## Behavior
+
+- Responses are cached with a **7-day TTL**.
+- Includes retry logic with exponential backoff on timeouts.
+- Empty responses return a DataFrame with the standard columns.

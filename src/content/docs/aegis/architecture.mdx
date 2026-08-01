@@ -1,0 +1,48 @@
+---
+title: Architecture
+order: 20
+section: Platform
+description: How the FastAPI backend, Redis, and Next.js frontend fit together.
+---
+
+## Layout
+
+```
+src/aiges/
+├── backend/
+│   ├── server.py          # FastAPI app bootstrap
+│   ├── redis/redis.py     # Redis client
+│   └── api/
+│       ├── api.py         # main app: routes, CORS, title
+│       └── routes/
+│           ├── country.py # /country/{code}
+│           └── forcast_api.py
+├── cli/cli.py             # typer commands: run, serve, ui
+├── config.py              # env loading (NEWS_DATA_API)
+└── frontend/              # Next.js 15 App Router app
+```
+
+## Data Flow
+
+1. The frontend calls the FastAPI backend on port `8000`.
+2. Routes use the `Hermes` facade from the `hermes-plt` package to fetch country risk features, with a local Parquet cache at `src/aiges/backend/hermes_cache`.
+3. Redis backs transient state; Supabase (Postgres) stores persisted records.
+4. ML models (scikit-learn / xgboost / river) run in-process for forecasts and anomaly scoring.
+
+## Backend API
+
+`aiges.backend.api.api:app` is the uvicorn entry point. It mounts CORS for `http://localhost:3000` and exposes the platform routes — see [API](/aegis/api).
+
+## Frontend
+
+The Next.js app runs on port `3000` with middleware, shadcn/ui components, and App Router screens (dashboard, country, forecast, anomaly, explain, reports, agent, scenarios).
+
+## Processes
+
+Aegis runs as two cooperating processes — API server and Next.js server — orchestrated by the CLI:
+
+```bash
+aiges run          # both, dev mode
+aiges serve        # backend only
+aiges ui           # frontend only
+```

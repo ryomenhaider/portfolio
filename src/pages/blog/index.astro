@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+<BaseLayout title="Blog — Haider Ali" path="/blog" description="Writing about data platforms, ML tooling, and building things from scratch.">
+  <main class="home-body min-h-screen">
+    <section class="relative overflow-hidden">
+      <div class="hero-grid absolute inset-0" />
+      <div class="absolute -top-32 right-1/4 h-80 w-80 rounded-full bg-violet-600/25 blur-[110px] animate-pulse-slow" />
+      <div class="relative max-w-3xl mx-auto px-4 pt-20 pb-12 text-center">
+        <p class="font-mono text-sm text-[#a78bfa] tracking-widest mb-4">$ cat notes/</p>
+        <h1 class="font-black tracking-tighter text-5xl sm:text-6xl">BLOG</h1>
+        <p class="mt-5 text-white/60 max-w-lg mx-auto leading-relaxed">
+          Notes on data platforms, ML math, and building software from scratch.
+        </p>
+      </div>
+    </section>
+
+    <section class="max-w-3xl mx-auto px-4 pb-24">
+      {posts.length === 0 && (
+        <p class="text-center text-white/40 font-mono">No posts yet — check back soon.</p>
+      )}
+      <div class="flex flex-col">
+        {posts.map((post) => (
+          <a
+            href={`/blog/${post.id.split('/').pop()}`}
+            class="group border-t border-white/10 py-8 flex flex-col gap-2 hover:bg-white/[0.03] px-3 -mx-3 transition-colors rounded-lg"
+          >
+            <div class="font-mono text-xs text-white/40">
+              {fmt.format(post.data.date)}
+              {post.data.tags.length > 0 && (
+                <span class="ml-3 text-[#a78bfa]">
+                  {post.data.tags.map((t) => `#${t}`).join(' ')}
+                </span>
+              )}
+            </div>
+            <h2 class="text-2xl font-bold tracking-tight group-hover:text-[#a78bfa] transition-colors">
+              {post.data.title}
+            </h2>
+            <p class="text-white/60 leading-relaxed max-w-2xl">{post.data.description}</p>
+            <span class="mt-1 text-sm font-semibold text-[#a78bfa]">
+              Read post →
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </main>
+</BaseLayout>

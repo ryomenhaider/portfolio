@@ -1,0 +1,56 @@
+---
+title: OpenSanctions
+order: 90
+section: Connectors
+description: Query sanctions lists for individuals and entities by country.
+---
+
+**File:** `hermes/sources/opensanctions.py`
+
+## What It Does
+
+Queries the [OpenSanctions](https://www.opensanctions.org/) API for individuals and entities on sanctions lists, by country. Requires an API key (passed to the `Hermes` constructor or as an env var).
+
+**API:** `https://api.opensanctions.org`
+
+## Datasets
+
+Common datasets you can pass to `fetch()`:
+
+| Dataset | Description |
+|---------|-------------|
+| `us_ofac_sdn` | US OFAC Specially Designated Nationals |
+| `eu_fsf` | EU Financial Sanctions Files |
+| `uk_fcdos` | UK FCDO Sanctions List |
+| `un_sc` | UN Security Council Sanctions |
+
+## Usage
+
+```python
+from hermes import Hermes
+
+hr = Hermes(opensanction_api=os.getenv("OPEN_SANCTIONS_API"))
+
+# US OFAC list entries linked to Russia
+data = hr.opensanction.fetch(
+    country="RUS",
+    dataset="us_ofac_sdn",
+    limit=50,
+)
+```
+
+### `fetch(country, dataset, limit=50, changed_since=None, topic=None, facets=None, force=False) → DataFrame`
+
+- `country` — ISO3 code (converted to ISO2 internally)
+- `dataset` — one of the datasets above (required; empty raises `ValueError`)
+- `limit` — max results, capped at 1000
+- `changed_since` — ISO date to only fetch entities changed after it
+- `topic` — filter by sanctions topic
+- `facets` — request response facets
+- `force` — bypass the cache
+
+## Behavior
+
+- Responses are cached with a **30-day TTL**.
+- Retries with exponential backoff on timeouts and 5xx errors.
+- 404 (unknown dataset) or invalid country codes return an empty result.

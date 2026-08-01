@@ -1,0 +1,56 @@
+---
+title: Getting Started
+order: 10
+description: Install Hermes, configure the OpenSanctions key, and run your first queries.
+---
+
+## Requirements
+
+- Python **>= 3.11**
+- [uv](https://docs.astral.sh/uv/) for dependency management
+- An [OpenSanctions](https://www.opensanctions.org/) API key
+
+## Installation
+
+```bash
+git clone <repo-url> Hermes
+cd Hermes
+uv sync --extra dev
+```
+
+The `dev` extra pulls in pytest, ruff, mypy, and other development tools. Use plain `uv sync` for a production install.
+
+## Configuration
+
+Copy the environment template and add your OpenSanctions API key:
+
+```bash
+cp .env.example .env
+# OPEN_SANCTIONS_API=your_key_here
+```
+
+> The API key is required. Instantiating `Hermes` without one raises a `KeyError`.
+
+## Quick Start
+
+```python
+from hermes import Hermes
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+hr = Hermes(opensanction_api=os.getenv("OPEN_SANCTIONS_API"))
+
+# Every supported country code (ISO3)
+print(hr.list_countries)
+
+# All available feature functions
+print(hr.list_features)
+```
+
+## What's Next
+
+- [Hermes Class](/hermes/hermes) — the SDK facade and its methods
+- [Features API](/hermes/features) — country risk snapshots and ML panels
+- [Data Cache](/hermes/cache) — how raw responses are stored

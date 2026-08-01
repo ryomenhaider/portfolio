@@ -1,0 +1,62 @@
+---
+title: Data Cache
+order: 30
+section: Hermes SDK
+description: How RawCache stores API responses as Parquet on disk.
+---
+
+**File:** `hermes/core/cache.py`
+
+## What It Does
+
+The `RawCache` stores every raw API response as a Parquet file on disk, keyed by a SHA-256 hash of the source and request parameters. Connectors read from the cache instead of re-hitting the API, which keeps repeated calls fast and avoids burning rate limits.
+
+## Storage
+
+- Default location: `~/.hermes_cache/raw/`
+- Layout: `~/.hermes_cache/raw/{source}/{hash}.parquet`
+- Each file is paired with a `{hash}.meta.json` sidecar (source, params, cached_at, rows, columns)
+- Default TTL: `24 hours`
+
+## Per-Source TTLs
+
+Each connector sets its own TTL based on how often the underlying data changes:
+
+| Source | TTL | Why |
+|--------|-----|-----|
+| GDELT | 6 hours | Event data updates constantly. |
+| World Bank | 7 days | Indicators released weekly. |
+| IMF | 7 days | Dataflows refresh weekly. |
+| OpenSanctions | 30 days | Sanctions lists change slowly. |
+
+## API
+
+### `get(source, params, ttl=None) → DataFrame`
+
+Reads a cached response. Raises `CacheMiss` if the file is missing, expired (file is deleted), or corrupted (file is deleted and re-fetched).
+
+### `put(source, params, df)`
+
+Writes a DataFrame to the cache with its metadata sidecar.
+
+### `get_or_fetch(source, params, fetch_fn, force=False, ttl=None) → DataFrame`
+
+The workhorse used by every connector: try the cache first, and only call `fetch_fn` on a miss. Pass `force=True` to bypass the cache and refresh from the API.
+
+```python
+df = cache.get_or_fetch(
+    source="world_bank",
+    params={"country": "USA", "indicator": "NY.GDP.MKTP.KD.ZG"},
+    fetch_fn=lambda: api_call(),
+    force=False,
+    ttl=timedelta(days=7),
+)
+```
+
+### `clear(older_than: timedelta | None = None)`
+
+Deletes cached files (and their metadata). Without arguments it wipes everything; with a `timedelta` it only removes entries older than that age.
+
+### `stats() → dict`
+
+Returns `total_files`, `by_source`, `hits`, `misses`, and `hit_rate` per source.

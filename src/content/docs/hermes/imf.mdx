@@ -1,0 +1,56 @@
+---
+title: IMF
+order: 70
+section: Connectors
+description: Fetch time series from the IMF SDMX 3.0 API.
+---
+
+**File:** `hermes/sources/imf.py`
+
+## What It Does
+
+Fetches time series from the IMF SDMX 3.0 API — International Financial Statistics (IFS), World Economic Outlook (WEO), Government Finance Statistics (GFS), and other dataflows. No authentication required.
+
+**API:** `https://api.imf.org/external/sdmx/3.0/data/dataflow/`
+
+## Usage
+
+```python
+from hermes import Hermes
+
+hr = Hermes(opensanction_api=...)
+
+# GDP in national currency, IFS dataflow
+df = hr.imf.fetch(
+    country="USA",
+    agency="IFS",
+    dataflow_id="IFS",
+    key="NGDP_R",
+)
+```
+
+### `fetch(country, agency, dataflow_id, key, force=False) → DataFrame`
+
+- `country` — ISO3 code, e.g. `"USA"` (converted to ISO2 internally)
+- `agency` — SDMX agency, e.g. `"IFS"`, `"WEO"`
+- `dataflow_id` — dataflow, e.g. `"IFS"`, `"WEO"`
+- `key` — indicator key within the dataflow, e.g. `"NGDP_R"`
+- `force` — bypass the cache and refresh from the API
+
+## Output Columns
+
+| Column | Description |
+|--------|-------------|
+| `date` | Observation period |
+| `indicator_id` | Indicator code (from the `INDICATOR`/`INDEX_TYPE` dimension) |
+| `country` | Country code |
+| `value` | The observation value |
+| `source` | Always `"IMF"` |
+
+Any additional SDMX series dimensions (e.g. `FREQ`, `UNIT`) are appended as extra columns.
+
+## Behavior
+
+- Responses are cached with a **7-day TTL**.
+- 404s (unknown country/dataflow) return an empty DataFrame instead of raising.
+- Includes retry logic with exponential backoff on timeouts.
