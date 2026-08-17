@@ -1,0 +1,28 @@
+---
+title: MLOps & Drift
+order: 60
+section: Pipelines
+description: PSI + KS drift detection per feature against a rolling baseline, with alerts.
+---
+
+**File:** `mlops/drift_detector.py`
+
+## What It Does
+
+Runs **PSI** (Population Stability Index) and **Kolmogorov–Smirnov** tests per feature against a rolling baseline, so distribution shifts in live data are caught before they degrade model performance.
+
+## Alerting
+
+Drift triggers **email + Slack alerts** — configurable via environment settings.
+
+## CLI
+
+```bash
+python mlops/drift_detector.py --tickers AAPL,MSFT --send-alerts
+```
+
+## Roadmap
+
+- Persist drift runs and expose via API
+- Visualize drift in the dashboard
+- Add Prometheus/Grafana observability (see `res/PHASE_3_OBSERVABILITY.md`)

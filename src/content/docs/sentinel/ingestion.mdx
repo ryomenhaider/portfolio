@@ -1,0 +1,49 @@
+---
+title: Data Ingestion
+order: 40
+section: Pipelines
+description: Multi-source collection, feature engineering, and the stage runner.
+---
+
+**Files:** `ingestion/`
+
+## Fetchers
+
+| Fetcher | Source | Data |
+|---------|--------|------|
+| `price_fetcher.py` | yfinance | Stock OHLCV |
+| `crypto_fetcher.py` | CCXT | Crypto OHLCV |
+| `macro_fetcher.py` | FRED | Macro indicators |
+| `news_fetcher.py` | newsdata.io + FinBERT | Headlines + sentiment scores |
+| `feature_engineer.py` | — | Computed features |
+
+## Feature Engineering
+
+Raw prices are transformed into model-ready features:
+
+- Log returns
+- Lags
+- Rolling statistics
+- RSI
+- Bollinger %B
+- Volume ratios
+
+## Pipeline Runner
+
+`ingestion/ingestion_pipeline.py` runs every stage in sequence and reports pass/fail per stage:
+
+```bash
+python -m ingestion.ingestion_pipeline
+```
+
+Individual stages can be run standalone — useful for debugging a single source:
+
+```bash
+python -m ingestion.price_fetcher
+python -m ingestion.crypto_fetcher
+python -m ingestion.macro_fetcher
+python -m ingestion.news_fetcher
+python -m ingestion.feature_engineer
+```
+
+Each pipeline exits non-zero on failure, so it can be wired into cron or CI directly.

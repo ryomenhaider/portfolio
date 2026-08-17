@@ -1,0 +1,33 @@
+---
+title: Deployment
+order: 90
+description: Single-container deployment with any PostgreSQL — including free tiers.
+---
+
+## The Container
+
+The Dockerfile builds one image with:
+
+- CPU torch from the PyTorch CPU index
+- A single uvicorn process serving API + dashboard
+- Healthcheck on `/api/health`
+
+No docker-compose, no separate services — one image, one process, one port.
+
+## Database
+
+PostgreSQL is the only external dependency. Any of these work:
+
+- Local Postgres
+- Docker container
+- Supabase hosted Postgres (pooler URL)
+
+Supabase works because all state lives in Postgres — ephemeral filesystem storage is fine.
+
+## Deployable Targets
+
+The ephemeral-storage-friendly design makes it deployable on free-tier platforms like **Hugging Face Spaces** (see `res/PHASE_5_DEPLOY_HUGGINGFACE.md` for the plan).
+
+## Configuration
+
+All deployment config is environment-driven (`config/settings.py`, `.env`): `DB_URL`, API keys for each data source, `MLFLOW_URI`, `API_BASE_URL`, and the dashboard API key.

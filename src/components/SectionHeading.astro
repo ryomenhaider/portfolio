@@ -1,0 +1,32 @@
+---
+interface Link {
+  href: string;
+  label: string;
+  external?: boolean;
+}
+
+interface Props {
+  kicker: string;
+  title: string;
+  link?: Link;
+}
+
+const { kicker, title, link } = Astro.props;
+---
+
+<div class="mb-10 flex flex-wrap items-end justify-between gap-4">
+  <div>
+    <p class="mb-2 font-mono text-sm text-accent-text">{kicker}</p>
+    <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">{title}</h2>
+  </div>
+  {link && (
+    <a
+      href={link.href}
+      target={link.external ? '_blank' : undefined}
+      rel={link.external ? 'noopener' : undefined}
+      class="font-mono text-sm text-text-muted transition-colors hover:text-accent-text"
+    >
+      {link.label} {link.external ? '↗' : '→'}
+    </a>
+  )}
+</div>

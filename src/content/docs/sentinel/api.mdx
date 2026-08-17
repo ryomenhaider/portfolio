@@ -1,0 +1,29 @@
+---
+title: API Reference
+order: 70
+description: REST endpoints for prices, anomalies, forecasts, sentiment, and portfolio.
+---
+
+**Base:** `/api` — interactive docs at `/api/docs`, health at `/api/health`
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/health` | App + DB health |
+| `GET /api/prices/compare?tickers=AAPL,MSFT` | Latest quotes, multi-asset |
+| `GET /api/prices/{ticker}` | Latest price |
+| `GET /api/prices/{ticker}/history?limit=90` | OHLCV history |
+| `GET /api/anomalies/detected?ticker=&days=` | Detected anomalies |
+| `GET /api/anomalies/{ticker}` | Anomalies for one asset |
+| `GET /api/forecasts/{ticker}?days=30` | Prophet/XGBoost forecast |
+| `GET /api/forecasts/compare/{ticker}` | Actual vs predicted |
+| `GET /api/sentiment/heatmap` | Latest sentiment per ticker |
+| `GET /api/sentiment/timeline?ticker=&days=` | Sentiment history |
+| `GET /api/portfolio/metrics` | Portfolio metrics |
+| `POST /api/portfolio/optimize` | Run optimization |
+
+## Smoke Checks
+
+```bash
+curl http://localhost:7860/api/health
+curl http://localhost:7860/api/prices/AAPL/history?limit=5
+```

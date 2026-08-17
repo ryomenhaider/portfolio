@@ -1,0 +1,40 @@
+---
+title: Machine Learning
+order: 50
+section: Pipelines
+description: Anomaly detection, forecasting, sentiment, portfolio optimization, and model tracking.
+---
+
+**Files:** `ml/`
+
+## Anomaly Detection
+
+`anomaly_detector.py` — Isolation Forest + LOF (PyOD). Detections are written to the database with severity labels.
+
+## Time-Series Forecasting
+
+`forecaster.py` — Prophet + XGBoost with walk-forward cross-validation at 30/90-day horizons.
+
+## Sentiment Analysis
+
+`sentiment_engine.py` — FinBERT (Hugging Face `transformers`, CPU) scores news headlines.
+
+## Portfolio Optimization
+
+`portfolio_optimizer.py` — risk-constrained weight allocation via scipy (MVO).
+
+## Training Pipeline
+
+`train_pipeline.py` orchestrates training and records metrics:
+
+```bash
+python -m ml.train_pipeline
+```
+
+## Model Registry
+
+`model_registry.py` wraps MLflow — save, load, and promote models with metrics, params, and artifacts tracked per run.
+
+## Feature Store
+
+`feature_store.py` provides consistent, versioned access to engineered features for both training and inference.

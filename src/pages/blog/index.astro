@@ -10,47 +10,46 @@ const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', 
 ---
 
 <BaseLayout title="Blog — Haider Ali" path="/blog" description="Writing about data platforms, ML tooling, and building things from scratch.">
-  <main class="home-body min-h-screen">
-    <section class="relative overflow-hidden">
-      <div class="hero-grid absolute inset-0" />
-      <div class="absolute -top-32 right-1/4 h-80 w-80 rounded-full bg-violet-600/25 blur-[110px] animate-pulse-slow" />
-      <div class="relative max-w-3xl mx-auto px-4 pt-20 pb-12 text-center">
-        <p class="font-mono text-sm text-[#a78bfa] tracking-widest mb-4">$ cat notes/</p>
-        <h1 class="font-black tracking-tighter text-5xl sm:text-6xl">BLOG</h1>
-        <p class="mt-5 text-white/60 max-w-lg mx-auto leading-relaxed">
-          Notes on data platforms, ML math, and building software from scratch.
-        </p>
-      </div>
-    </section>
+  <section class="border-b border-border">
+    <div class="page-container py-14 sm:py-20">
+      <p class="mb-3 font-mono text-sm text-accent-text">writing</p>
+      <h1 class="font-display text-3xl font-bold tracking-tight sm:text-4xl">Blog</h1>
+      <p class="mt-3 max-w-lg leading-relaxed text-text-secondary">
+        Notes on data platforms, ML math, and building software from scratch.
+      </p>
+    </div>
+  </section>
 
-    <section class="max-w-3xl mx-auto px-4 pb-24">
-      {posts.length === 0 && (
-        <p class="text-center text-white/40 font-mono">No posts yet — check back soon.</p>
-      )}
-      <div class="flex flex-col">
+  <section class="page-container py-12 sm:py-16">
+    {posts.length === 0 ? (
+      <p class="font-mono text-sm text-text-muted">No posts yet — check back soon.</p>
+    ) : (
+      <div class="divide-y divide-border border-y border-border">
         {posts.map((post) => (
           <a
             href={`/blog/${post.id.split('/').pop()}`}
-            class="group border-t border-white/10 py-8 flex flex-col gap-2 hover:bg-white/[0.03] px-3 -mx-3 transition-colors rounded-lg"
+            class="group -mx-4 flex flex-col gap-2 rounded-lg px-4 py-6 transition-colors hover:bg-surface/60 sm:-mx-6 sm:px-6 sm:py-7"
           >
-            <div class="font-mono text-xs text-white/40">
+            <div class="font-mono text-xs text-text-muted">
               {fmt.format(post.data.date)}
               {post.data.tags.length > 0 && (
-                <span class="ml-3 text-[#a78bfa]">
+                <span class="ml-3 text-accent-text">
                   {post.data.tags.map((t) => `#${t}`).join(' ')}
                 </span>
               )}
             </div>
-            <h2 class="text-2xl font-bold tracking-tight group-hover:text-[#a78bfa] transition-colors">
+            <h2 class="font-display text-xl font-bold tracking-tight transition-colors group-hover:text-accent-text sm:text-2xl">
               {post.data.title}
             </h2>
-            <p class="text-white/60 leading-relaxed max-w-2xl">{post.data.description}</p>
-            <span class="mt-1 text-sm font-semibold text-[#a78bfa]">
+            <p class="max-w-2xl text-sm leading-relaxed text-text-secondary">
+              {post.data.description}
+            </p>
+            <span class="mt-1 text-sm font-semibold text-accent-text">
               Read post →
             </span>
           </a>
         ))}
       </div>
-    </section>
-  </main>
+    )}
+  </section>
 </BaseLayout>

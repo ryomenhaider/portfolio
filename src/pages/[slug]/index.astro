@@ -36,7 +36,7 @@ const rendered = await Promise.all(
     const anchor = doc.id.split('/').pop()!;
     return (
       <section id={anchor} class="scroll-mt-24">
-        {i > 0 && <hr class="my-14 border-black/10" />}
+        {i > 0 && <hr class="my-14 border-border" />}
         <h1>{doc.data.title}</h1>
         <Content />
       </section>

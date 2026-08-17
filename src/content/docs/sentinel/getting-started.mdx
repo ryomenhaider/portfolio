@@ -1,0 +1,67 @@
+---
+title: Getting Started
+order: 30
+description: Install Sentinel, configure the database, ingest data, train models, and run the app.
+---
+
+## Requirements
+
+- Python **3.11** (pinned via `.python-version`)
+- [uv](https://docs.astral.sh/uv/) for dependency management
+- A reachable PostgreSQL (local, Docker, or Supabase pooler URL)
+
+## Install
+
+```bash
+git clone <repo-url> Sentinel
+cd Sentinel
+uv sync
+```
+
+## Configure
+
+```bash
+cp .env.example .env
+# DB_URL must point to a reachable PostgreSQL
+```
+
+| Variable | Purpose |
+|----------|---------|
+| `DB_URL` | SQLAlchemy PostgreSQL URL (Supabase-ready) |
+| `API_KEYS` | `service:key,service:key` map |
+| `FRED_API_KEY` | FRED macro data |
+| `NEWSDATA_API_KEY` | News ingestion |
+| `MLFLOW_URI` | MLflow tracking URI (default `file:./mlruns`) |
+| `LOG_LEVEL` | INFO / DEBUG / WARNING |
+| `API_BASE_URL` | Base URL the dashboard uses for API calls |
+| `DASHBOARD_API_KEY` | Sent with dashboard→API requests |
+
+## Initialize Schema
+
+Option A — Supabase: paste `database/schema.sql` then `database/seed_data.sql` into the SQL Editor (recommended).
+
+Option B — any Postgres:
+
+```bash
+psql "$DB_URL" -f database/schema.sql && psql "$DB_URL" -f database/seed_data.sql
+```
+
+## Ingest, Train, Serve
+
+```bash
+python -m ingestion.ingestion_pipeline   # or run fetchers individually
+python -m ml.train_pipeline
+uvicorn api.main:app --host 0.0.0.0 --port 7860
+```
+
+## Verify
+
+| Service | URL |
+|---------|-----|
+| Dashboard | `http://localhost:7860/dashboard/` |
+| API Docs (Swagger) | `http://localhost:7860/api/docs` |
+| Health | `http://localhost:7860/api/health` |
+
+```bash
+curl http://localhost:7860/api/health   # {"status":"ok","database":"connected",...}
+```

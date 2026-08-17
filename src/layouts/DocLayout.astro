@@ -17,22 +17,22 @@ const project = getProject(slug);
 ---
 
 <BaseLayout title={title} description={description} path={current}>
-  <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)] bg-[#0a0a0f] text-white">
-    <details class="lg:hidden border-b border-white/10 bg-[#0e0e15]">
-      <summary class="px-4 py-3 flex items-center justify-between gap-4 cursor-pointer select-none list-none">
+  <div class="flex min-h-[calc(100vh-4rem)] flex-col lg:flex-row">
+    <details class="border-b border-border bg-surface lg:hidden">
+      <summary class="flex cursor-pointer select-none list-none items-center justify-between gap-4 px-4 py-3">
         <span class="flex items-center gap-2">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-[#a78bfa]" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-accent-text" aria-hidden="true">
             <line x1="3" y1="6" x2="21" y2="6" />
             <line x1="3" y1="12" x2="21" y2="12" />
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
-          <span class="font-black tracking-tight">
-            {project?.name ?? slug} <span class="text-white/40 font-mono text-xs">docs</span>
+          <span class="font-display font-bold tracking-tight">
+            {project?.name ?? slug} <span class="font-mono text-xs font-normal text-text-muted">docs</span>
           </span>
         </span>
-        <span class="text-xs font-mono text-white/40">
+        <span class="font-mono text-xs text-text-muted">
           {docs.length} sections
-          <span class="details-arrow inline-block ml-1 transition-transform">▾</span>
+          <span class="details-arrow ml-1 inline-block transition-transform">▾</span>
         </span>
       </summary>
       <Sidebar slug={slug} docs={docs} current={current} />
@@ -41,13 +41,13 @@ const project = getProject(slug);
       <Sidebar slug={slug} docs={docs} current={current} />
     </div>
     <main class="flex-1 p-5 lg:p-10">
-      <div class="max-w-3xl mx-auto doc-content">
+      <div class="doc-content mx-auto max-w-3xl">
         <slot />
-        <nav class="mt-16 pt-4 border-t border-white/10 flex justify-between font-mono text-sm">
-          <a href={`/${slug}#top`} class="text-white/40 hover:text-[#a78bfa] transition-colors">
+        <nav class="mt-16 flex justify-between border-t border-border pt-4 font-mono text-sm">
+          <a href={`/${slug}#top`} class="text-text-muted transition-colors hover:text-accent-text">
             ↑ back to top
           </a>
-          <a href="/" class="text-white/40 hover:text-[#a78bfa] transition-colors">
+          <a href="/" class="text-text-muted transition-colors hover:text-accent-text">
             home
           </a>
         </nav>

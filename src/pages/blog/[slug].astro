@@ -22,36 +22,36 @@ const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', d
   description={post.data.description}
   path={`/blog/${post.id.split('/').pop()}`}
 >
-  <main class="home-body min-h-screen">
-    <article class="max-w-3xl mx-auto px-4 py-16">
-      <a href="/blog" class="font-mono text-sm text-white/40 hover:text-[#a78bfa] transition-colors">
+  <article class="page-container py-14 sm:py-16">
+    <div class="mx-auto max-w-3xl">
+      <a href="/blog" class="font-mono text-sm text-text-muted transition-colors hover:text-accent-text">
         ← all posts
       </a>
-      <header class="mt-8 mb-10">
-        <div class="font-mono text-sm text-white/40 mb-3">
+      <header class="mb-10 mt-8">
+        <div class="mb-3 font-mono text-sm text-text-muted">
           {fmt.format(post.data.date)}
           {post.data.tags.length > 0 && (
-            <span class="ml-3 text-[#a78bfa]">
+            <span class="ml-3 text-accent-text">
               {post.data.tags.map((t) => `#${t}`).join(' ')}
             </span>
           )}
         </div>
-        <h1 class="font-black tracking-tighter text-4xl sm:text-5xl leading-tight">
+        <h1 class="font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
           {post.data.title}
         </h1>
-        <p class="mt-4 text-white/60 text-lg leading-relaxed">{post.data.description}</p>
+        <p class="mt-4 text-lg leading-relaxed text-text-secondary">{post.data.description}</p>
       </header>
       <div class="doc-content">
         <Content />
       </div>
-      <footer class="mt-16 pt-6 border-t border-white/10 flex justify-between font-mono text-sm">
-        <a href="/blog" class="text-white/40 hover:text-[#a78bfa] transition-colors">
+      <footer class="mt-16 flex justify-between border-t border-border pt-6 font-mono text-sm">
+        <a href="/blog" class="text-text-muted transition-colors hover:text-accent-text">
           ← all posts
         </a>
-        <a href="/" class="text-white/40 hover:text-[#a78bfa] transition-colors">
+        <a href="/" class="text-text-muted transition-colors hover:text-accent-text">
           home ↑
         </a>
       </footer>
-    </article>
-  </main>
+    </div>
+  </article>
 </BaseLayout>

@@ -1,0 +1,24 @@
+---
+interface Props {
+  status: string;
+  dot?: boolean;
+}
+
+const { status, dot } = Astro.props;
+const active = status === 'active';
+---
+
+<span
+  class:list={[
+    'inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest',
+    active ? 'border-success/30 bg-success/10 text-success' : 'border-warning/30 bg-warning/10 text-warning',
+  ]}
+>
+  {dot && (
+    <span
+      class:list={['h-1.5 w-1.5 rounded-full', active ? 'bg-success' : 'bg-warning']}
+      aria-hidden="true"
+    />
+  )}
+  {status}
+</span>

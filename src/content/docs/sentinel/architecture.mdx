@@ -1,0 +1,47 @@
+---
+title: Architecture
+order: 20
+description: Single-container layout — FastAPI + Dash in one uvicorn process.
+---
+
+```
+                 ┌──────────────────────────────┐
+                 │        Single Container      │
+                 │   (uvicorn → FastAPI :7860)  │
+                 │                              │
+  Browser ──────►│  /api/*        FastAPI       │
+                 │               routers        │
+                 │                              │
+                 │  /dashboard/   Dash app      │
+                 │               (WSGIMiddleware)│
+                 └──────────────┬───────────────┘
+                                │
+                 ┌──────────────▼───────────────┐
+                 │   PostgreSQL (SQLAlchemy)    │
+                 │  Supabase / local / managed  │
+                 └──────────────────────────────┘
+
+    Data sources: yfinance · CCXT · FRED · newsdata.io
+    ML: PyOD · Prophet · XGBoost · FinBERT · scipy   → MLflow registry
+    MLOps: drift detection (PSI + KS) → email/Slack alerts
+```
+
+## Project Layout
+
+| Path | Responsibility |
+|------|----------------|
+| `api/` | FastAPI app factory, CORS, Dash mount, Pydantic schemas, 5 routers |
+| `dashboard/` | Dash app mounted at `/dashboard/` — layout, Bloomberg-dark theme, 5 pages |
+| `ingestion/` | Data collection: price, crypto, macro, news fetchers + feature engineer + pipeline runner |
+| `ml/` | Anomaly detection, forecasting, sentiment, portfolio optimization, feature store, model registry, training pipeline |
+| `mlops/` | Drift detection (PSI + KS) with Slack/email alerts |
+| `database/` | SQLAlchemy models, CRUD, `schema.sql` + `seed_data.sql` |
+| `config/` | Settings + JSON logging |
+
+## Runtime Flow
+
+1. **Ingest** — `python -m ingestion.ingestion_pipeline` pulls OHLCV, crypto, macro, and news into PostgreSQL and engineers features.
+2. **Train** — `python -m ml.train_pipeline` fits anomaly/forecast/sentiment models and registers them in MLflow.
+3. **Serve** — one uvicorn process exposes `/api/*` (FastAPI) and `/dashboard/*` (Dash); the dashboard polls the API health endpoint every 30s.
+
+Planned: an APScheduler inside the app plus GitHub Actions cron for scheduling, replacing Airflow entirely.

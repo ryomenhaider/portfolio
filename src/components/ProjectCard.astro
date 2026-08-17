@@ -1,0 +1,38 @@
+---
+import type { Project } from '../config/projects';
+import StatusBadge from './StatusBadge.astro';
+import Tag from './Tag.astro';
+
+interface Props {
+  project: Project;
+  tech: string[];
+}
+
+const { project, tech } = Astro.props;
+---
+
+<a
+  href={`/${project.slug}`}
+  class="group flex flex-col gap-3 rounded-lg border border-border bg-surface p-5 transition-colors duration-150 hover:border-accent/50 hover:bg-surface-2"
+>
+  <div class="flex items-center justify-between gap-2">
+    <span class="font-display text-lg font-bold tracking-tight">{project.name}</span>
+    <StatusBadge status={project.status} />
+  </div>
+  <span class="font-mono text-[11px] uppercase tracking-[0.2em] text-accent-text">
+    {project.tagline}
+  </span>
+  <p class="text-sm leading-relaxed text-text-secondary">{project.description}</p>
+  <div class="mt-1 flex flex-wrap gap-1.5">
+    {tech.slice(0, 4).map((t) => <Tag label={t} />)}
+    {tech.length > 4 && (
+      <span class="px-1 py-0.5 font-mono text-[11px] text-text-muted">
+        +{tech.length - 4}
+      </span>
+    )}
+  </div>
+  <span class="mt-2 flex items-center gap-1 text-sm font-semibold text-text-secondary transition-colors group-hover:text-accent-text">
+    Read the docs
+    <span class="transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true">→</span>
+  </span>
+</a>

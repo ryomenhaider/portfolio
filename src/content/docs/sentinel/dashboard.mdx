@@ -1,0 +1,34 @@
+---
+title: Dashboard
+order: 80
+description: Five Plotly pages with a Bloomberg-style dark theme, served at /dashboard/.
+---
+
+**Files:** `dashboard/`
+
+## Pages
+
+| Page | Contents |
+|------|----------|
+| Market Overview | Plotly candlesticks + KPIs |
+| Anomalies | Detected anomalies per asset |
+| Forecasts | Prophet/XGBoost projections |
+| Portfolio | Holdings, metrics, optimization |
+| Sentiment | News sentiment per ticker |
+
+## Theme
+
+`theme.py` defines a dark "Bloomberg-style" palette — IBM Plex typography, terminal accents — applied consistently across all Plotly charts and dashboards.
+
+## Live Status
+
+The navbar polls the API health endpoint every 30 seconds and shows a live indicator, so a dead backend is visible immediately.
+
+## Mounting
+
+Dash is served by the same uvicorn process as the API via WSGIMiddleware:
+
+```
+/            → FastAPI routers (/api/*)
+/dashboard/  → Dash app
+```

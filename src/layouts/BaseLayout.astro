@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { projects, siteUrl, socials } from '../config/projects';
+import ThemeToggle from '../components/ThemeToggle.astro';
 
 interface Props {
   title: string;
@@ -22,29 +23,47 @@ const canonical = new URL(path, siteUrl);
     <link rel="canonical" href={canonical} />
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='black'/><text x='50' y='68' font-size='60' text-anchor='middle' fill='white' font-family='monospace'>H</text></svg>"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='14' fill='%234f46e5'/><text x='50' y='68' font-size='60' text-anchor='middle' fill='white' font-family='monospace'>H</text></svg>"
     />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <title>{title}</title>
+    <script is:inline>
+      (function () {
+        var stored = null;
+        try {
+          stored = localStorage.getItem('theme');
+        } catch (e) {}
+        var theme =
+          stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
   </head>
-  <body class="min-h-screen flex flex-col">
-    <header class="sticky top-0 z-50 border-b border-white/10 bg-[#0a0a0f]/85 backdrop-blur-md">
-      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        <a href="/" class="font-black tracking-tight text-lg text-white hover:text-[#a78bfa] transition-colors">
-          haiderali<span class="text-[#a78bfa]">.dev</span>
+  <body class="flex min-h-screen flex-col">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-accent-contrast"
+    >
+      Skip to content
+    </a>
+
+    <header class="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
+      <div class="page-container flex items-center justify-between gap-4 py-3">
+        <a href="/" class="font-display text-lg font-bold tracking-tight transition-colors hover:text-accent-text">
+          haiderali<span class="text-accent-text">.dev</span>
         </a>
-        <nav class="hidden lg:flex flex-wrap items-center gap-1">
+        <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
           {projects.map((p) => (
             <a
               href={`/${p.slug}`}
               class:list={[
-                'px-3 py-1.5 text-sm font-semibold rounded-md transition-colors',
+                'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
                 path.startsWith(`/${p.slug}`)
-                  ? 'bg-white text-black'
-                  : 'text-white/60 hover:text-white hover:bg-white/10',
+                  ? 'bg-surface-2 text-text'
+                  : 'text-text-secondary hover:bg-surface-2 hover:text-text',
               ]}
             >
               {p.name}
@@ -53,10 +72,10 @@ const canonical = new URL(path, siteUrl);
           <a
             href="/blog"
             class:list={[
-              'px-3 py-1.5 text-sm font-semibold rounded-md transition-colors',
+              'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
               path === '/blog' || path.startsWith('/blog/')
-                ? 'bg-white text-black'
-                : 'text-white/60 hover:text-white hover:bg-white/10',
+                ? 'bg-surface-2 text-text'
+                : 'text-text-secondary hover:bg-surface-2 hover:text-text',
             ]}
           >
             Blog
@@ -64,35 +83,39 @@ const canonical = new URL(path, siteUrl);
           <a
             href={socials.github}
             target="_blank"
-            class="ml-1 px-3 py-1.5 text-sm font-semibold rounded-md text-white border border-white/25 hover:bg-white hover:text-black transition-colors"
+            rel="noopener"
+            class="btn-ghost ml-1"
           >
             GitHub ↗
           </a>
         </nav>
-        <button
-          id="nav-toggle"
-          class="lg:hidden p-2 rounded-md text-white/80 hover:bg-white/10 transition-colors"
-          aria-label="Toggle menu"
-          aria-expanded="false"
-          aria-controls="mobile-nav"
-        >
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-        </button>
+        <div class="flex items-center gap-1">
+          <ThemeToggle />
+          <button
+            id="nav-toggle"
+            class="rounded-md p-2 text-text-secondary transition-colors hover:bg-surface-2 hover:text-text lg:hidden"
+            aria-label="Toggle menu"
+            aria-expanded="false"
+            aria-controls="mobile-nav"
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        </div>
       </div>
-      <nav id="mobile-nav" class="hidden lg:hidden border-t border-white/10 bg-[#0a0a0f]/95 px-4 py-2">
+      <nav id="mobile-nav" class="hidden border-t border-border px-4 py-2 lg:hidden" aria-label="Mobile">
         <div class="grid grid-cols-2 gap-1">
           {projects.map((p) => (
             <a
               href={`/${p.slug}`}
               class:list={[
-                'px-3 py-2 text-sm font-semibold rounded-md transition-colors',
+                'rounded-md px-3 py-2 text-sm font-medium transition-colors',
                 path.startsWith(`/${p.slug}`)
-                  ? 'bg-white text-black'
-                  : 'text-white/70 hover:bg-white/10',
+                  ? 'bg-surface-2 text-text'
+                  : 'text-text-secondary hover:bg-surface-2 hover:text-text',
               ]}
             >
               {p.name}
@@ -101,10 +124,10 @@ const canonical = new URL(path, siteUrl);
           <a
             href="/blog"
             class:list={[
-              'px-3 py-2 text-sm font-semibold rounded-md transition-colors',
+              'rounded-md px-3 py-2 text-sm font-medium transition-colors',
               path === '/blog' || path.startsWith('/blog/')
-                ? 'bg-white text-black'
-                : 'text-white/70 hover:bg-white/10',
+                ? 'bg-surface-2 text-text'
+                : 'text-text-secondary hover:bg-surface-2 hover:text-text',
             ]}
           >
             Blog
@@ -112,7 +135,8 @@ const canonical = new URL(path, siteUrl);
           <a
             href={socials.github}
             target="_blank"
-            class="px-3 py-2 text-sm font-semibold rounded-md text-white border border-white/25"
+            rel="noopener"
+            class="rounded-md px-3 py-2 text-sm font-medium text-text-secondary hover:bg-surface-2 hover:text-text"
           >
             GitHub ↗
           </a>
@@ -120,27 +144,27 @@ const canonical = new URL(path, siteUrl);
       </nav>
     </header>
 
-    <div class="flex-1">
+    <main id="main" class="flex-1">
       <slot />
-    </div>
+    </main>
 
-    <footer class="border-t border-white/10 bg-[#0a0a0f]">
-      <div class="max-w-6xl mx-auto px-4 py-5 flex flex-wrap items-center justify-between gap-3 text-sm text-white/60">
+    <footer class="border-t border-border bg-surface">
+      <div class="page-container flex flex-wrap items-center justify-between gap-3 py-5 text-sm text-text-muted">
         <span>© {new Date().getFullYear()} Haider Ali</span>
         <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <a href={socials.linkedin} target="_blank" class="hover:text-white transition-colors">
+          <a href={socials.linkedin} target="_blank" rel="noopener" class="transition-colors hover:text-text">
             LinkedIn
           </a>
-          <a href={socials.x} target="_blank" class="hover:text-white transition-colors">
+          <a href={socials.x} target="_blank" rel="noopener" class="transition-colors hover:text-text">
             X
           </a>
-          <a href={socials.github} target="_blank" class="hover:text-white transition-colors">
+          <a href={socials.github} target="_blank" rel="noopener" class="transition-colors hover:text-text">
             GitHub
           </a>
-          <a href="/blog" class="hover:text-white transition-colors">
+          <a href="/blog" class="transition-colors hover:text-text">
             Blog
           </a>
-          <span class="text-white/30 font-mono text-xs hidden sm:inline">built with astro</span>
+          <span class="hidden font-mono text-xs text-text-muted/70 sm:inline">built with astro</span>
         </div>
       </div>
     </footer>
@@ -151,15 +175,19 @@ const canonical = new URL(path, siteUrl);
   const toggle = document.getElementById('nav-toggle');
   const menu = document.getElementById('mobile-nav');
   if (toggle && menu) {
+    const close = () => {
+      menu.classList.add('hidden');
+      toggle.setAttribute('aria-expanded', 'false');
+    };
     toggle.addEventListener('click', () => {
       const isOpen = !menu.classList.toggle('hidden');
       toggle.setAttribute('aria-expanded', String(isOpen));
     });
     menu.addEventListener('click', (e) => {
-      if ((e.target as HTMLElement).closest('a')) {
-        menu.classList.add('hidden');
-        toggle.setAttribute('aria-expanded', 'false');
-      }
+      if ((e.target as HTMLElement).closest('a')) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
     });
   }
 </script>

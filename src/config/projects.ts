@@ -20,6 +20,16 @@ export const projects: Project[] = [
     githubUser: 'ryomenhaider',
   },
   {
+    slug: 'sentinel',
+    name: 'Sentinel',
+    tagline: 'Financial Intelligence Platform',
+    description:
+      'Real-time data ingestion, anomaly detection, time-series forecasting, and news-sentiment analytics served through a Bloomberg-style dashboard.',
+    repo: 'https://github.com/ryomenhaider/Sentinel',
+    status: 'active',
+    githubUser: 'ryomenhaider',
+  },
+  {
     slug: 'aegis',
     name: 'Aegis',
     tagline: 'Risk Intelligence Platform',
@@ -66,9 +76,8 @@ export function getProject(slug: string): Project | undefined {
 }
 
 export const owner = 'haiderali';
-export const siteUrl = 'https://haideralidev95.vercel.app/';
+export const siteUrl = 'https://haideralidev.xyz';
 
-// TODO: replace with your real profile URLs
 export const socials = {
   github: 'https://github.com/ryomenhaider',
   linkedin: 'https://www.linkedin.com/in/haider-ali-4634773a2/',
