@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import Tag from '../../components/Tag.astro';
+import { socials } from '../../config/projects';
+---
+
+<BaseLayout title="Aegis — Risk Intelligence Platform" description="End-to-end risk intelligence platform: FastAPI backend, Redis caching, ML forecasting, and a Qt/QML frontend." path="/aegis">
+  <section class="border-b border-border">
+    <div class="page-container py-14 sm:py-20 lg:py-24">
+      <div class="flex items-center gap-3 mb-5">
+        <StatusBadge status="active" />
+      </div>
+      <h1 class="font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+        Aegis
+      </h1>
+      <p class="mt-2 font-mono text-sm text-accent-text">Risk Intelligence Platform</p>
+      <p class="mt-5 max-w-2xl text-lg leading-relaxed text-text-secondary">
+        End-to-end risk intelligence platform: FastAPI backend, Supabase database, hermes-plt data integration, and a Qt/QML C++ frontend. Anomaly detection, forecasting, risk scoring, and explainability — built for real-time risk analysis.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a href="/aegis/docs" class="btn-primary">
+          Read the docs <span aria-hidden="true">→</span>
+        </a>
+        <a href={socials.github} target="_blank" rel="noopener" class="btn-secondary">GitHub ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-container py-16 sm:py-24">
+    <p class="mb-2 font-mono text-sm text-accent-text">planned features</p>
+    <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">What's being built</h2>
+    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="rounded-lg border border-border bg-surface p-5">
+        <h3 class="font-display font-bold">Anomaly Detection</h3>
+        <p class="mt-2 text-sm text-text-secondary">Real-time anomaly detection on risk signals.</p>
+      </div>
+      <div class="rounded-lg border border-border bg-surface p-5">
+        <h3 class="font-display font-bold">Forecasting</h3>
+        <p class="mt-2 text-sm text-text-secondary">Time-series forecasting for risk indicators.</p>
+      </div>
+      <div class="rounded-lg border border-border bg-surface p-5">
+        <h3 class="font-display font-bold">Risk Scoring</h3>
+        <p class="mt-2 text-sm text-text-secondary">Composite risk scores with explainability.</p>
+      </div>
+      <div class="rounded-lg border border-border bg-surface p-5">
+        <h3 class="font-display font-bold">RAG Pipeline</h3>
+        <p class="mt-2 text-sm text-text-secondary">Retrieval-augmented generation for risk context.</p>
+      </div>
+      <div class="rounded-lg border border-border bg-surface p-5">
+        <h3 class="font-display font-bold">Simulation</h3>
+        <p class="mt-2 text-sm text-text-secondary">Agent-based simulation for scenario analysis.</p>
+      </div>
+      <div class="rounded-lg border border-border bg-surface p-5">
+        <h3 class="font-display font-bold">Qt/QML Frontend</h3>
+        <p class="mt-2 text-sm text-text-secondary">Native C++ desktop interface.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-border bg-surface">
+    <div class="page-container py-16 sm:py-24">
+      <p class="mb-2 font-mono text-sm text-accent-text">stack</p>
+      <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">Built with</h2>
+      <div class="mt-8 flex flex-wrap gap-2">
+        {['Python 3.11+', 'FastAPI', 'Supabase', 'hermes-plt', 'Qt/QML', 'C++'].map((t) => <Tag label={t} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

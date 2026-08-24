@@ -58,7 +58,7 @@ const canonical = new URL(path, siteUrl);
         <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
           {projects.map((p) => (
             <a
-              href={`/${p.slug}/docs`}
+              href={`/${p.slug}`}
               class:list={[
                 'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
                 path.startsWith(`/${p.slug}`)
@@ -110,7 +110,7 @@ const canonical = new URL(path, siteUrl);
         <div class="grid grid-cols-2 gap-1">
           {projects.map((p) => (
             <a
-              href={`/${p.slug}/docs`}
+              href={`/${p.slug}`}
               class:list={[
                 'rounded-md px-3 py-2 text-sm font-medium transition-colors',
                 path.startsWith(`/${p.slug}`)

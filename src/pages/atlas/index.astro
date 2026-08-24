@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import { socials } from '../../config/projects';
+---
+
+<BaseLayout title="Atlas" description="Project scaffolding in place. Documentation will be published as the project takes shape." path="/atlas">
+  <section class="border-b border-border">
+    <div class="page-container py-14 sm:py-20 lg:py-24">
+      <div class="flex items-center gap-3 mb-5">
+        <StatusBadge status="scaffold" />
+      </div>
+      <h1 class="font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+        Atlas
+      </h1>
+      <p class="mt-5 max-w-2xl text-lg leading-relaxed text-text-secondary">
+        Project scaffolding is in place. Documentation will be published here as the project takes shape.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a href="/atlas/docs" class="btn-primary">
+          Read the docs <span aria-hidden="true">→</span>
+        </a>
+        <a href={socials.github} target="_blank" rel="noopener" class="btn-secondary">GitHub ↗</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

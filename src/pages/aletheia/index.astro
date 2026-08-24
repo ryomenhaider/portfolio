@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import Tag from '../../components/Tag.astro';
+import { socials } from '../../config/projects';
+---
+
+<BaseLayout title="Aletheia" description="Early-stage mathematical and scientific tooling project." path="/aletheia">
+  <section class="border-b border-border">
+    <div class="page-container py-14 sm:py-20 lg:py-24">
+      <div class="flex items-center gap-3 mb-5">
+        <StatusBadge status="scaffold" />
+      </div>
+      <h1 class="font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+        Aletheia
+      </h1>
+      <p class="mt-5 max-w-2xl text-lg leading-relaxed text-text-secondary">
+        Early-stage mathematical and scientific tooling project. Documentation will be published here as the project takes shape.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a href="/aletheia/docs" class="btn-primary">
+          Read the docs <span aria-hidden="true">→</span>
+        </a>
+        <a href={socials.github} target="_blank" rel="noopener" class="btn-secondary">GitHub ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-container py-16 sm:py-24">
+    <p class="mb-2 font-mono text-sm text-accent-text">stack</p>
+    <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">Built with</h2>
+    <div class="mt-8 flex flex-wrap gap-2">
+      {['Python 3.11+', 'NumPy', 'pandas'].map((t) => <Tag label={t} />)}
+    </div>
+  </section>
+</BaseLayout>
