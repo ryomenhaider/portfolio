@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from 'astro:content';
+import { projects } from '../../../config/projects';
+import DocLayout from '../../../layouts/DocLayout.astro';
+
+export async function getStaticPaths() {
+  const docs = await getCollection('docs');
+  return projects.map((p) => {
+    const pageDocs = docs
+      .filter((d) => d.id.startsWith(`${p.slug}/`))
+      .sort((a, b) => a.data.order - b.data.order);
+    return {
+      params: { slug: p.slug },
+      props: { project: p, pageDocs },
+    };
+  });
+}
+
+const { project, pageDocs } = Astro.props;
+const rendered = await Promise.all(
+  pageDocs.map(async (doc) => {
+    const { Content } = await render(doc);
+    return { doc, Content };
+  })
+);
+---
+
+<DocLayout
+  slug={project.slug}
+  docs={pageDocs}
+  current={`/${project.slug}/docs`}
+  title={`${project.name} Docs — ${project.tagline}`}
+  description={project.description}
+>
+  {rendered.map(({ doc, Content }, i) => {
+    const anchor = doc.id.split('/').pop()!;
+    return (
+      <section id={anchor} class="scroll-mt-24">
+        {i > 0 && <hr class="my-14 border-border" />}
+        <h1>{doc.data.title}</h1>
+        <Content />
+      </section>
+    );
+  })}
+</DocLayout>

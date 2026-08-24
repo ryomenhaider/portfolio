@@ -42,7 +42,7 @@ const allItems = [...topItems, ...sectionEntries.flatMap(([, list]) => list)];
   <nav class="px-2 py-3">
     {topItems.map((item) => (
       <a
-        href={`/${slug}#${item.anchor}`}
+        href={`/${slug}/docs#${item.anchor}`}
         data-spy={item.anchor}
         class="sidebar-link block rounded-r-md border-l-2 px-3 py-1.5 text-sm font-medium transition-colors"
       >
@@ -56,7 +56,7 @@ const allItems = [...topItems, ...sectionEntries.flatMap(([, list]) => list)];
         </div>
         {list.map((item) => (
           <a
-            href={`/${slug}#${item.anchor}`}
+            href={`/${slug}/docs#${item.anchor}`}
             data-spy={item.anchor}
             class="sidebar-link block rounded-r-md border-l-2 px-3 py-1.5 text-sm font-medium transition-colors"
           >
