@@ -1,16 +1,17 @@
 ---
 title: Getting Started
 order: 30
-description: Install Sentinel, configure the database, ingest data, train models, and run the app.
+description: Install Sentinel, configure the database, and run the backend.
 ---
 
 ## Requirements
 
-- Python **3.11** (pinned via `.python-version`)
+- Python **3.12** (pinned via `.python-version`)
 - [uv](https://docs.astral.sh/uv/) for dependency management
 - A reachable PostgreSQL (local, Docker, or Supabase pooler URL)
+- Node.js 18+ (for the frontend)
 
-## Install
+## Install Backend
 
 ```bash
 git clone <repo-url> Sentinel
@@ -22,23 +23,24 @@ uv sync
 
 ```bash
 cp .env.example .env
-# DB_URL must point to a reachable PostgreSQL
 ```
 
 | Variable | Purpose |
 |----------|---------|
-| `DB_URL` | SQLAlchemy PostgreSQL URL (Supabase-ready) |
-| `API_KEYS` | `service:key,service:key` map |
+| `DB_URL` | SQLAlchemy PostgreSQL URL (Supabase-ready, sslmode=require) |
 | `FRED_API_KEY` | FRED macro data |
 | `NEWSDATA_API_KEY` | News ingestion |
-| `MLFLOW_URI` | MLflow tracking URI (default `file:./mlruns`) |
-| `LOG_LEVEL` | INFO / DEBUG / WARNING |
-| `API_BASE_URL` | Base URL the dashboard uses for API calls |
-| `DASHBOARD_API_KEY` | Sent with dashboard→API requests |
+| `FINNHUB_API` | Finnhub (for hermes-plt) |
+| `OPENSANCTIONS_API` | OpenSanctions (for hermes-plt) |
+| `SEC_USERNAME` / `SEC_EMAIL` | SEC EDGAR (for hermes-plt) |
+| `MLFLOW_URI` | MLflow tracking URI (default `http://localhost:5000`) |
+| `LOG_LEVEL` | INFO / DEBUG / WARNING (default INFO) |
+| `SMTP_SERVER/PORT/USER/PASSWORD` | Email drift alerts |
+| `SLACK_WEBHOOK_URL` | Slack drift alerts |
 
 ## Initialize Schema
 
-Option A — Supabase: paste `database/schema.sql` then `database/seed_data.sql` into the SQL Editor (recommended).
+Option A — Supabase: paste `database/schema.sql` then `database/seed_data.sql` into the SQL Editor.
 
 Option B — any Postgres:
 
@@ -46,22 +48,32 @@ Option B — any Postgres:
 psql "$DB_URL" -f database/schema.sql && psql "$DB_URL" -f database/seed_data.sql
 ```
 
-## Ingest, Train, Serve
+## Run
 
 ```bash
-python -m ingestion.ingestion_pipeline   # or run fetchers individually
-python -m ml.train_pipeline
-uvicorn api.main:app --host 0.0.0.0 --port 7860
+stl all    # ingest → train → start API
+```
+
+Or individually:
+
+```bash
+stl ingest
+stl ml-train
+stl api-start
+```
+
+## Install Frontend
+
+```bash
+cd web
+npm install
+npm run dev    # http://localhost:5173 (proxies /api/* to :7860)
 ```
 
 ## Verify
 
 | Service | URL |
 |---------|-----|
-| Dashboard | `http://localhost:7860/dashboard/` |
 | API Docs (Swagger) | `http://localhost:7860/api/docs` |
 | Health | `http://localhost:7860/api/health` |
-
-```bash
-curl http://localhost:7860/api/health   # {"status":"ok","database":"connected",...}
-```
+| Dashboard | `http://localhost:5173` (dev) |

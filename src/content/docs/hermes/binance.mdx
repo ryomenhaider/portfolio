@@ -1,0 +1,54 @@
+---
+title: Binance
+order: 160
+section: Connectors
+description: Binance spot and futures — OHLCV, order book, funding rate, open interest.
+---
+
+**File:** `sources/binance.py`
+
+## What It Does
+
+Fetches crypto market data from the Binance API — both spot and futures (USDT-margined). No API key required for public endpoints.
+
+## Fetch
+
+```python
+df = await hr.binance.fetch(
+    symbol="BTCUSDT",
+    interval="1d",       # 1m, 5m, 15m, 1h, 4h, 1d
+    limit=100,
+)
+```
+
+## Endpoints
+
+| Method | What It Fetches |
+|--------|-----------------|
+| `fetch()` | OHLCV candles |
+| `fetch_trades()` | Recent trades |
+| `fetch_agg_trades()` | Aggregated trades |
+| `fetch_order_book()` | Order book depth |
+| `fetch_ticker()` | 24hr rolling stats |
+| `fetch_funding_rate()` | Perpetual futures funding rate |
+| `fetch_open_interest()` | Open interest |
+
+## Output (OHLCV)
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `date` | datetime | Candle open time |
+| `indicator_id` | str | `"OHLCV"` |
+| `country` | str | N/A |
+| `value` | float | Close price |
+| `source` | str | `"binance"` |
+
+Additional columns: `open`, `high`, `low`, `volume`.
+
+## Used By
+
+The `TAfeatures` class (technical analysis) pulls from Binance to compute 86-field snapshots including trend scores, order book imbalance, funding rates, and composite signals.
+
+## Cache
+
+1-day TTL.

@@ -2,39 +2,64 @@
 title: Machine Learning
 order: 50
 section: Pipelines
-description: Anomaly detection, forecasting, sentiment, portfolio optimization, and model tracking.
+description: Anomaly detection, forecasting, sentiment analysis, portfolio optimization, and model tracking.
 ---
 
 **Files:** `ml/`
 
 ## Anomaly Detection
 
-`anomaly_detector.py` — Isolation Forest + LOF (PyOD). Detections are written to the database with severity labels.
+`anomaly_detector.py` — Isolation Forest + Local Outlier Factor (PyOD ensemble).
 
-## Time-Series Forecasting
+- **Features:** log_return, volume_ratio, rolling_std_21, rsi_14, bb_pct_b
+- **Contamination:** 5% expected anomalies
+- **Process:** StandardScaler → IForest (100 estimators) + LOF (20 neighbors) → MinMax-normalize and average → severity labels (≥0.8 critical, ≥0.6 high, ≥0.4 medium, below 0.4 low)
+- **Default tickers:** AAPL, MSFT, NVDA, TSLA, GOOGL
 
-`forecaster.py` — Prophet + XGBoost with walk-forward cross-validation at 30/90-day horizons.
+## Forecasting
+
+`forecaster.py` — Prophet + XGBoost blended 50/50.
+
+- **Horizons:** 30 days and 90 days
+- **XGBoost features:** lag_1d, lag_5d, lag_21d, lag_63d, rolling_mean_21, rolling_std_21, rsi_14, volume_ratio, bb_pct_b
+- **Cross-validation:** Walk-forward CV (5 splits), MAE + RMSE
+- **Blending:** Simple average of Prophet yhat and XGBoost predictions
 
 ## Sentiment Analysis
 
-`sentiment_engine.py` — FinBERT (Hugging Face `transformers`, CPU) scores news headlines.
+`sentiment_engine.py` — aggregates historical sentiment scores.
+
+- Daily averages with 7-day and 30-day rolling means
+- Signal: 7d > 30d = BULLISH, 7d below 30d = BEARISH, else NEUTRAL
+- Note: FinBERT scoring happens in ingestion, not here
 
 ## Portfolio Optimization
 
-`portfolio_optimizer.py` — risk-constrained weight allocation via scipy (MVO).
+`portfolio_optimizer.py` — four allocation methods:
 
-## Training Pipeline
+| Method | Description |
+|--------|-------------|
+| MPT | Mean-Variance Optimization — minimizes negative Sharpe via scipy SLSQP, long-only |
+| Black-Litterman | Sentiment scores as investor views (scaled 0.05), equal-weight implied returns |
+| Kelly Criterion | Fractional Kelly based on win rate and payoff ratio, clipped non-negative |
+| Blended | 40% MPT + 40% BL + 20% Kelly |
 
-`train_pipeline.py` orchestrates training and records metrics:
-
-```bash
-python -m ml.train_pipeline
-```
-
-## Model Registry
-
-`model_registry.py` wraps MLflow — save, load, and promote models with metrics, params, and artifacts tracked per run.
+**Tickers:** AAPL, MSFT, NVDA, TSLA, GOOGL. **Risk-free rate:** 5%, 252 trading days.
 
 ## Feature Store
 
-`feature_store.py` provides consistent, versioned access to engineered features for both training and inference.
+`feature_store.py` — in-memory dict cache of feature DataFrames per ticker, with DB fallback.
+
+## Model Registry
+
+`model_registry.py` — MLflow integration: save, load, promote models with metrics/params/artifacts tracked per run.
+
+## Training Pipeline
+
+```bash
+stl ml-train
+```
+
+Two modes:
+- `run_pipeline()` — basic: warmup → anomalies → forecasting → sentiment → portfolio
+- `run_pipeline_with_metrics()` — enhanced: collects CV metrics, logs to MLflow (enabled via `WITH_METRICS=true`)

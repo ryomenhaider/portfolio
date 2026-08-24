@@ -1,34 +1,31 @@
 ---
 title: Dashboard
 order: 80
-description: Five Plotly pages with a Bloomberg-style dark theme, served at /dashboard/.
+description: Seven React pages with a Bloomberg-style dark theme.
 ---
 
-**Files:** `dashboard/`
+**Files:** `web/src/pages/`
+
+The dashboard is a React 19 SPA with Plotly.js charts, lazy-loaded via `React.lazy()`. Uses a custom dark Bloomberg-style design system with IBM Plex Mono/Sans fonts.
 
 ## Pages
 
-| Page | Contents |
-|------|----------|
-| Market Overview | Plotly candlesticks + KPIs |
-| Anomalies | Detected anomalies per asset |
-| Forecasts | Prophet/XGBoost projections |
-| Portfolio | Holdings, metrics, optimization |
-| Sentiment | News sentiment per ticker |
+| Page | Route | Contents |
+|------|-------|----------|
+| Overview | `/` | OHLCV candlestick with Bollinger Bands + volume. KPI cards (Last Close, Daily Volume, RSI, 52W Range). Top Movers table (10 tickers, 24H change). Time range selector (7D/30D/90D/1Y). Auto-refreshes every 60s. |
+| Anomalies | `/anomalies` | Price chart with severity-coded anomaly markers. Anomaly score timeline (0-1, threshold at 0.7). Flagged Events table with severity badges. Severity filter (ALL/CRITICAL/HIGH/MEDIUM/LOW). CSV export. |
+| Forecasts | `/forecasts` | Historical + forecast line chart with 95% confidence band. KPI cards (YHAT, bounds, model, horizon). Forecast Comparison tool (enter tickers). Next 10 days table. Feature Importance bar chart. Model Registry card (MLflow). Disclaimer: "NOT INVESTMENT ADVICE". |
+| Technical | `/technical` | Crypto-focused. Search from 20 Binance perpetual futures. Displays: Price Snapshot, Returns, Moving Averages (SMA 20/50/200, EMA 9/21/50), Volatility (20/60, ATR), Order Book (bid/ask, spread, imbalance), Funding & OI, Trade Activity, Composite Scores (Trend, Mean Reversion, Liquidity, Order Flow, Sentiment with progress bars). |
+| Fundamental | `/fundamental` | Stock-focused. Search from 18 US equities. Displays: Income Statement, Balance Sheet, Cash Flow, Valuation Ratios (P/E, P/S, P/B, EV/EBITDA), Balance Sheet Ratios (D/E, ROE, ROA), Earnings & Estimates, Shares, Macro Indicators (GDP, inflation, rates, unemployment). Company peers as badges. |
+| Portfolio | `/portfolio` | Weighted bar chart (4 methods). Allocation Treemap. Efficient Frontier scatter (Monte Carlo + method stars). KPIs: Sharpe, VaR (95%), Max Drawdown, Beta, Sortino. Weights table. Method selector: Blended, MPT, Black-Litterman, Kelly Criterion. |
+| Sentiment | `/sentiment` | Sentiment score timeline (positive/negative/neutral scatter + 3-pt MA). Gauge indicator (-1 to +1). Avg Sentiment bar chart. Latest News list with sentiment badges. KPI cards: Total, Positive, Negative, Neutral, Avg Score. |
+
+## Sidebar
+
+- Health status indicator (LIVE/DEGRADED/OFFLINE) polled every 30s
+- "Wake Up" button with 60s countdown (Render free-tier cold starts)
+- Responsive: icon-rail at 980px, bottom tabs at 640px
 
 ## Theme
 
-`theme.py` defines a dark "Bloomberg-style" palette — IBM Plex typography, terminal accents — applied consistently across all Plotly charts and dashboards.
-
-## Live Status
-
-The navbar polls the API health endpoint every 30 seconds and shows a live indicator, so a dead backend is visible immediately.
-
-## Mounting
-
-Dash is served by the same uvicorn process as the API via WSGIMiddleware:
-
-```
-/            → FastAPI routers (/api/*)
-/dashboard/  → Dash app
-```
+Custom dark palette — IBM Plex Mono/Sans typography, terminal-style accents, Plotly chart theming via `web/src/theme.ts`.

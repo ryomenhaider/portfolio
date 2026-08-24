@@ -1,0 +1,62 @@
+---
+title: Finnhub
+order: 170
+section: Connectors
+description: Finnhub stock data — candles, profiles, metrics, earnings, and peers.
+---
+
+**File:** `sources/finnhub.py`
+
+## What It Does
+
+Fetches US equity data from the Finnhub API (`finnhub.io/api/v1`). 12 endpoints covering price history, company profiles, financial metrics, and earnings.
+
+## Fetch
+
+```python
+df = await hr.finnhub.fetch(
+    symbol="AAPL",
+    resolution="D",       # D, W, M
+    from_date=1609459200,  # Unix timestamp
+    to_date=1704067200,
+)
+```
+
+## Endpoints
+
+| Method | Description |
+|--------|-------------|
+| `fetch()` | OHLCV candles |
+| `fetch_quote()` | Current quote (price, change, percent) |
+| `fetch_profile()` | Company profile (name, industry, market cap) |
+| `fetch_metric()` | Financial metrics (P/E, P/S, P/B, ROE, etc.) |
+| `fetch_peers()` | Company peers |
+| `fetch_earnings()` | Earnings history |
+| `fetch_insider()` | Insider transactions |
+| `fetch_eps()` | EPS estimates |
+| `fetch_ebitda()` | EBITDA estimates |
+| `fetch_revenue()` | Revenue estimates |
+| `fetch_news()` | Company news |
+| `fetch_symbol()` | Symbol search |
+
+## Output Columns
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `date` | datetime | Observation date |
+| `indicator_id` | str | Endpoint identifier |
+| `country` | str | N/A |
+| `value` | float | Metric value |
+| `source` | str | `"finnhub"` |
+
+## Used By
+
+The `FAfeatures` class (fundamental analysis) pulls from Finnhub for company profiles, financial metrics, and earnings data to compute 71-field snapshots.
+
+## API Key
+
+Get a free key at [finnhub.io](https://finnhub.io/) (60 calls/min free tier).
+
+## Cache
+
+7-day TTL.

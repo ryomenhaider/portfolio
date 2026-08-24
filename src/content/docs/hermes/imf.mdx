@@ -1,56 +1,49 @@
 ---
 title: IMF
-order: 70
+order: 120
 section: Connectors
-description: Fetch time series from the IMF SDMX 3.0 API.
+description: IMF SDMX 3.0 dataflow connector — IFS, WEO, GFS datasets.
 ---
 
-**File:** `hermes/sources/imf.py`
+**File:** `sources/imf.py`
 
 ## What It Does
 
-Fetches time series from the IMF SDMX 3.0 API — International Financial Statistics (IFS), World Economic Outlook (WEO), Government Finance Statistics (GFS), and other dataflows. No authentication required.
+Fetches data from the IMF SDMX 3.0 API (`api.imf.org/external/sdmx/3.0`). Supports three dataflows: International Financial Statistics (IFS), World Economic Outlook (WEO), and Government Finance Statistics (GFS).
 
-**API:** `https://api.imf.org/external/sdmx/3.0/data/dataflow/`
-
-## Usage
+## Fetch
 
 ```python
-from hermes import Hermes
-
-hr = Hermes(opensanction_api=...)
-
-# GDP in national currency, IFS dataflow
-df = hr.imf.fetch(
-    country="USA",
-    agency="IFS",
-    dataflow_id="IFS",
-    key="NGDP_R",
+df = await hr.imf.fetch(
+    dataflow="IFS",          # or "WEO" or "GFS"
+    key="M..IX.._T",         # SDMX key pattern
+    start_period=2010,
+    end_period=2024,
 )
 ```
 
-### `fetch(country, agency, dataflow_id, key, force=False) → DataFrame`
-
-- `country` — ISO3 code, e.g. `"USA"` (converted to ISO2 internally)
-- `agency` — SDMX agency, e.g. `"IFS"`, `"WEO"`
-- `dataflow_id` — dataflow, e.g. `"IFS"`, `"WEO"`
-- `key` — indicator key within the dataflow, e.g. `"NGDP_R"`
-- `force` — bypass the cache and refresh from the API
-
 ## Output Columns
 
-| Column | Description |
-|--------|-------------|
-| `date` | Observation period |
-| `indicator_id` | Indicator code (from the `INDICATOR`/`INDEX_TYPE` dimension) |
-| `country` | Country code |
-| `value` | The observation value |
-| `source` | Always `"IMF"` |
+| Column | Type | Description |
+|--------|------|-------------|
+| `date` | datetime | Observation date |
+| `indicator_id` | str | IMF indicator code (e.g. `PPI.IX.A`) |
+| `country` | str | ISO2 country code (auto-converted from ISO3) |
+| `value` | float | Indicator value |
+| `source` | str | `"imf"` |
 
-Any additional SDMX series dimensions (e.g. `FREQ`, `UNIT`) are appended as extra columns.
+## Key Indicators
 
-## Behavior
+| Dataflow | Code | Name | Used In |
+|----------|------|------|---------|
+| IFS | `PPI.IX.A` | Producer Price Index | `ppi_yoy` feature |
+| IFS | `CPI._T.IX.M` | Consumer Price Index | `inflation_yoy` feature |
+| IFS | `EREER_IX.M` | Effective Exchange Rate | `reer_misalignment` feature |
+| WEO | `GGXCNL_NGDP` | Fiscal Deficit (% GDP) | `fiscal_deficit_gdp` feature |
+| WEO | `GGXWDG_NGDP` | Government Debt (% GDP) | `government_debt_gdp` feature |
 
-- Responses are cached with a **7-day TTL**.
-- 404s (unknown country/dataflow) return an empty DataFrame instead of raising.
-- Includes retry logic with exponential backoff on timeouts.
+## Notes
+
+- ISO3 → ISO2 conversion handled automatically via `pycountry`
+- 404 responses return empty DataFrame (no error)
+- 7-day cache TTL

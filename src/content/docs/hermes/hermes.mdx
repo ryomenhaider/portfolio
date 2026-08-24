@@ -1,5 +1,5 @@
 ---
-title: Hermes Class
+title: Hermes SDK
 order: 20
 section: Hermes SDK
 description: The Hermes facade — constructor, attributes, and methods.
@@ -9,7 +9,7 @@ description: The Hermes facade — constructor, attributes, and methods.
 
 ## What It Does
 
-The `Hermes` class is the main entry point of the SDK. It composes every connector and the feature pipeline into a single object, so all functionality is reachable through one import:
+The `Hermes` class is the single entry point to the entire platform. It composes every connector, the feature pipeline, and the analysis models into one object — all functionality is reachable through one import:
 
 ```python
 from hermes import Hermes
@@ -19,49 +19,88 @@ from hermes import Hermes
 
 ```python
 Hermes(
-    opensanction_api: str,
-    cache_dir: str | None = None,
-    use_cache: bool = True,
+    opensanction_api: str,       # OpenSanctions API key
+    new_data_api: str,           # NewsData API key (wired, no connector yet)
+    fred_api: str,               # FRED API key
+    sec_username: str,           # SEC EDGAR username (for User-Agent)
+    sec_email: str,              # SEC EDGAR email
+    finnhub_api: str,            # Finnhub API key
+    cache_dir: str | None = None,# Custom cache dir (default: ~/.hermes_cache)
+    use_cache: bool = True,      # Enable/disable caching
 )
 ```
 
-| Argument | Default | Description |
-|----------|---------|-------------|
-| `opensanction_api` | — | OpenSanctions API key. Required; raises `KeyError` if empty. |
-| `cache_dir` | `~/.hermes_cache/raw` | Directory for the raw Parquet cache. |
-| `use_cache` | `True` | Set to `False` to disable caching entirely. |
+## Data Source Connectors
 
-## Attributes
+| Attribute | Class | Source | What It Fetches |
+|-----------|-------|--------|-----------------|
+| `.world_bank` | `World_bank` | World Bank v2 API | GDP, inflation, unemployment, governance, debt — 20+ indicators |
+| `.imf` | `IMF` | IMF SDMX 3.0 | IFS, WEO, GFS dataflows — PPI, CPI, fiscal balance, REER |
+| `.gdelt` | `GDELT` | GDELT Doc API + exports | Conflict, protest, diplomacy events — Goldstein scale, battle deaths |
+| `.opensanction` | `OpenSanction` | OpenSanctions API | Sanctions lists (OFAC, EU, UK, UN) |
+| `.fred` | `FRED` | FRED (Federal Reserve) | 23 US economic series — GDP, CPI, Fed Funds, VIX, yield curve |
+| `.binance` | `Binance` | Binance API | Spot + futures OHLCV, order book, funding rate, open interest |
+| `.finnhub` | `FINNHUB` | Finnhub API | 12 endpoints: candles, quote, profile, metrics, peers, earnings, EPS |
+| `.sec_edger` | `SECEDGAR` | SEC EDGAR XBRL | Company facts — income, balance sheet, cash flow via XBRL |
+| `.yfin` | `Yfinance` | Yahoo Finance | EPS estimate, revenue estimate, earnings history |
+| `.datasets` | `PUBLIC_DATASET` | Bundled CSVs | 8 datasets: HRS, HDI, CPI, FSI, NATO, CRS, CVS, SIPRI |
 
-| Attribute | Type | Description |
-|-----------|------|-------------|
-| `hr.features` | `pipeline` | Country risk pipeline — snapshots and training panels. |
-| `hr.lf` | `features` | Feature registry — access every feature function. |
-| `hr.list_features` | `list` | All ~60 feature functions, ready to call. |
-| `hr.list_countries` | `list[str]` | All supported ISO3 country codes. |
-| `hr.world_bank` | `World_bank` | World Bank connector. |
-| `hr.imf` | `IMF` | IMF SDMX connector. |
-| `hr.gdelt` | `GDELT` | GDELT events connector. |
-| `hr.opensanction` | `OpenSanction` | OpenSanctions connector. |
+## Analysis Models
+
+| Attribute | Class | What It Provides |
+|-----------|-------|------------------|
+| `.country_features` | `pipeline` | `get_country_risk_features()` and `build_training_panel()` — 58 country risk features |
+| `.ta_feature` | `TAfeatures` | Technical analysis — 86-field `TechnicalSnapshot` from Binance data |
+| `.fa_features` | `FAfeatures` | Fundamental analysis — 71-field `CompanyFundamental` from Finnhub/SEC/FRED/YF |
+
+## Feature Registry
+
+| Attribute | Description |
+|-----------|-------------|
+| `.lf` | Feature groups: `.eco` (economic), `.geo` (geopolitical), `.sec` (security), `.soc` (social), `.env` (environmental) |
+| `.list_countries` | All ~250 supported ISO3 country codes |
+| `.list_features` | All ~58 feature functions (decorated with `@feature`) |
 
 ## Methods
 
-### `clear_cache(older_than: str | None = None)`
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `.clear_cache(older_than)` | `None` | Evict cache entries older than a timedelta (supports `h`/`d`/`w` units) |
+| `.cache_stats()` | `dict` | Files, per-source hit/miss counts, and hit rates |
 
-Deletes cached Parquet files. Pass a duration string like `"24h"`, `"7d"`, or `"2w"` to only remove entries older than that.
-
-```python
-hr.clear_cache()                 # wipe everything
-hr.clear_cache(older_than="7d") # only entries older than 7 days
-```
-
-### `cache_stats() → dict`
-
-Returns cache usage: total files, files per source, hits, misses, and hit rate per source.
+## Example
 
 ```python
-stats = hr.cache_stats()
-# {"total_files": 42, "by_source": {...}, "hits": {...}, "misses": {...}, "hit_rate": {...}}
-```
+from hermes import Hermes
 
-When caching is disabled, returns an empty stats dict.
+hr = Hermes(
+    opensanction_api="your-key",
+    new_data_api="",
+    fred_api="your-key",
+    sec_username="your-username",
+    sec_email="you@example.com",
+    finnhub_api="your-key",
+)
+
+# Country risk snapshot (dashboard mode)
+risk = await hr.country_features.get_country_risk_features("USA")
+risk["economic"]["gdp_growth_yoy"]
+
+# Country risk panel (ML mode)
+panel = await hr.country_features.build_training_panel(
+    fns=hr.list_features[:5],
+    countries=["USA", "GBR", "DEU"],
+)
+
+# Technical snapshot
+ta = await hr.ta_feature.get_technical("BTCUSDT")
+ta.trend_score
+
+# Fundamental snapshot
+fa = await hr.fa_features.get_fundamentels("AAPL")
+fa.pe_ratio
+
+# Direct connector usage
+df = await hr.world_bank.fetch("NY.GDP.MKTP.KD.ZG", "USA", 2010, 2024)
+df = await hr.fred.fetch(["DFF", "UNRATE", "CPIAUCSL"])
+```

@@ -1,59 +1,131 @@
 ---
-title: Canonical Schemas
-order: 110
-section: Hermes SDK
-description: The standard column shapes returned by connectors, features, and panels.
+title: Schemas
+order: 30
+description: Output shapes — connector frames, GDELT events, features, risk snapshots, and analysis models.
 ---
 
-## Connector Output
+## Connector Output (Standard)
 
-Every indicator-based connector (World Bank, IMF) returns the same core shape, so feature functions can rely on a stable contract:
-
-| Column | Type | Example |
-|--------|------|---------|
-| `date` | string | `"2023"` |
-| `indicator_id` | string | `"NY.GDP.MKTP.KD.ZG"` |
-| `country` | string | `"USA"` |
-| `value` | float | `2.1` |
-| `source` | string | `"World_Bank"` / `"IMF"` |
-
-## GDELT Event Schema
-
-Event-based connectors (GDELT) normalize to a different schema — one row per event, with no fixed frequency:
+All connectors (except GDELT) return a `pd.DataFrame` with a consistent shape:
 
 | Column | Type | Description |
 |--------|------|-------------|
-| `event_id` | string | Global event ID |
-| `date` | datetime | Event timestamp |
-| `country_iso3` | string | ISO3 country code |
-| `event_type` | string | protest / conflict / diplomacy / sanction / ... |
-| `severity` | float | Tone or Goldstein scale |
-| `lat`, `lon` | float | Coordinates |
-| `source` | string | Always `"gdelt"` |
+| `date` | datetime | Observation date |
+| `indicator_id` | str | Indicator code (e.g. `NY.GDP.MKTP.KD.ZG`) |
+| `country` | str | ISO2 or ISO3 country code |
+| `value` | float | Numeric value |
+| `source` | str | Data source identifier |
 
-## Feature Output
+## GDELT Event Schema
 
-Feature functions return one of two shapes, selected by the `mode` argument:
+| Column | Type | Description |
+|--------|------|-------------|
+| `event_id` | str | GDELT event identifier |
+| `date` | datetime | Event date |
+| `country_iso3` | str | ISO3 country code (FIPS-normalized) |
+| `event_type` | str | CONFLICT, PROTEST, DIPLOMACY, or SANCTIONS |
+| `severity` | float | Event severity score |
+| `lat` | float | Latitude |
+| `lon` | float | Longitude |
+| `source` | str | Always `"gdelt"` |
 
-- `mode="F"` — a single `float` / `int` (latest snapshot), or `NaN` when no data exists
-- `mode="ML"` — a `pd.Series` indexed monthly, empty when no data exists
+## Feature Output (Dual-Mode)
+
+Every feature function returns different shapes depending on mode:
+
+**`"F"` mode (dashboard):** A single scalar — `float`, `int`, `str`, or `bool`.
+
+```python
+await hr.lf.eco.gdp_growth_yoy("USA", mode="F")  # 2.3
+await hr.lf.geo.regime_type("USA", mode="F")      # "presidential"
+```
+
+**`"ML"` mode (training):** A monthly `pd.Series` with DatetimeIndex, resampled and interpolated.
+
+```python
+await hr.lf.eco.gdp_growth_yoy("USA", mode="ML")
+# 2020-01-01    2.1
+# 2020-02-01    2.0
+# ...
+```
+
+Missing data returns `np.nan` (`"F"`) or an empty `pd.Series` (`"ML"`) — never raises.
 
 ## Risk Snapshot Schema
 
-`get_country_risk_features()` returns a nested dict:
+Output of `get_country_risk_features(country)`:
 
-```json
+```python
 {
-    "country": "UKR",
-    "economic":     { "gdp_growth_yoy": 3.2, ... },
-    "geopolitical": { "conflict_event_count_30d": 47, ... },
-    "security":     { "military_spending_gdp": 4.1, ... },
-    "social":       { "human_development_index": 0.73, ... },
-    "environmental":{ "climate_vulnerability_score": 0.62, ... },
-    "metadata":     { "last_updated": "...", "features_version": "1.0.0" }
+    "country": "USA",
+    "economic": {
+        "gdp_growth_yoy": 2.3,
+        "inflation_cpi_yoy": 3.1,
+        "unemployment_rate": 3.7,
+        # ... 18 features
+    },
+    "geopolitical": {
+        "conflict_event_count_30d": 12,
+        "sanctions_count_active": 847,
+        "governance_wgi_composite": 1.2,
+        # ... 21 features
+    },
+    "security": {
+        "military_spending_gdp": 3.5,
+        "nato_member": True,
+        # ... 7 features
+    },
+    "social": {
+        "human_development_index": 0.921,
+        "fragile_state_index": 24.5,
+        # ... 6 features
+    },
+    "environmental": {
+        "climate_vulnerability_score": 0.35,
+        "water_stress_index": 4.2,
+        # ... 6 features
+    },
+    "metadata": {
+        "last_updated": "2025-01-15T10:30:00Z",
+        "features_version": "1.0.0"
+    }
 }
 ```
 
 ## Training Panel Schema
 
-`build_training_panel()` returns a DataFrame with a `(country_iso3, date)` MultiIndex and one column per feature.
+Output of `build_training_panel(fns, countries)`:
+
+A `pd.DataFrame` with a `MultiIndex(country_iso3, date)`, one column per feature function. Handles deduplication and concatenation across countries.
+
+## TechnicalSnapshot
+
+86-field dataclass for crypto technical analysis (`hr.ta_feature.get_technical(symbol)`):
+
+| Category | Fields |
+|----------|--------|
+| Price | OHLCV, returns (1/5/10/60-bar), range metrics |
+| Moving averages | SMA 20/50/200 distance, EMA 9/21/50 differences |
+| Volatility | 20/60-bar vol, ATR-14 normalized |
+| Volume | relative volume 20-bar, taker buy ratio |
+| Trades | count, buy ratio, avg/median trade size, large trade ratio |
+| Order book | bid/ask price/qty, spread (abs/bps), imbalance, depth |
+| 24h metrics | high/low/last, range, pct change, position in range, volume |
+| Funding | rate, lag-3, change, z-score, time to next funding |
+| Open interest | current, 1h/24h changes, OI-to-volume ratio |
+| Composites | trend score, mean reversion score, liquidity score, order flow score, sentiment score |
+
+## CompanyFundamental
+
+71-field dataclass for stock fundamental analysis (`hr.fa_features.get_fundamentels(ticker)`):
+
+| Category | Fields |
+|----------|--------|
+| Filing | ticker, date, period, year, type |
+| Income | revenue through net income, EPS basic/diluted |
+| Balance sheet | cash, receivables, inventory, assets, liabilities, equity, debt |
+| Cash flows | operating/investing/financing, capex |
+| Market | shares outstanding, current price, market cap |
+| Estimates | EPS, revenue, earnings/revenue surprise |
+| Macro | GDP, GDP growth, inflation, interest rates, unemployment, government debt, FX rates |
+| Valuation | P/E, P/S, P/B, EV/EBITDA, ROE, ROA, D/E |

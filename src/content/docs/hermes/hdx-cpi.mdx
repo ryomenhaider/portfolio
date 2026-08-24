@@ -1,38 +1,34 @@
 ---
 title: HDX CPI
-order: 100
+order: 210
 section: Connectors
-description: Read the bundled Corruption Perceptions Index dataset.
+description: Corruption Perception Index — bundled CSV dataset.
 ---
 
-**File:** `hermes/sources/hdx_cpi.py`
+**File:** `sources/lib/datasets/global_cpi_all.csv`
 
 ## What It Does
 
-Reads the Corruption Perceptions Index (CPI) from a bundled CSV dataset (`res/global_cpi_all.csv`), powered by the [Humanitarian Data Exchange](https://data.humdata.org/). No network calls — data ships with the package.
+Provides the Transparency International Corruption Perception Index (CPI) as a bundled CSV. No network requests — ships with the package.
 
-## Usage
+## Fetch
 
 ```python
-from hermes.sources.hdx_cpi import HDXCPI
-
-cpi = HDXCPI()
-
-df = cpi.fetch(country="USA")
+df = await hr.datasets.fetch(dataset="cpi", country="USA")
 ```
-
-### `fetch(country) → DataFrame`
-
-Filters the CPI dataset to a single ISO3 country code.
 
 ## Output Columns
 
-| Column | Description |
-|--------|-------------|
-| `iso3` | ISO3 country code |
-| `year` | Observation year |
-| `score` | CPI score (0-100) |
+| Column | Type | Description |
+|--------|------|-------------|
+| `date` | datetime | Year |
+| `indicator_id` | str | `"cpi"` |
+| `country` | str | ISO3 country code |
+| `value` | float | CPI score (0-100) |
+| `source` | str | `"public_data"` |
 
-## In the Pipeline
+## Used By
 
-This connector backs the `corruption_perception_index` feature in the geopolitical group.
+`corruption_perception_index` feature — score 0-100 where higher is less corrupt.
+
+See [Public Datasets](/hermes#public-datasets) for the full list of bundled datasets.

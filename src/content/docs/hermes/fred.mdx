@@ -1,0 +1,54 @@
+---
+title: FRED
+order: 150
+section: Connectors
+description: Federal Reserve Economic Data — 23 US economic series.
+---
+
+**File:** `sources/fred.py`
+
+## What It Does
+
+Fetches US economic data from the FRED API (`api.stlouisfed.org`). 23 series covering GDP, inflation, employment, interest rates, housing, and market indicators.
+
+## Fetch
+
+```python
+df = await hr.fred.fetch(
+    series_ids=["DFF", "UNRATE", "CPIAUCSL"],
+    start_date="2020-01-01",
+)
+```
+
+## Series
+
+| Series ID | Name | Used In |
+|-----------|------|---------|
+| `DFF` | Fed Funds Effective Rate | Interest rate context |
+| `CPIAUCSL` | Consumer Price Index | Inflation analysis |
+| `UNRATE` | Unemployment Rate | Labor market |
+| `GDP` | Gross Domestic Product | Economic output |
+| `T10Y2Y` | 10Y-2Y Yield Curve | Recession indicator |
+| `VIXCLS` | CBOE Volatility Index | Market fear gauge |
+| `DTWEXBGS` | Trade Weighted USD Index | Currency strength |
+| `MORTGAGE30US` | 30-Year Fixed Mortgage Rate | Housing market |
+
+Plus 15 additional series (M2, industrial production, housing starts, consumer sentiment, etc.).
+
+## Output Columns
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `date` | datetime | Observation date |
+| `indicator_id` | str | FRED series ID |
+| `country` | str | Always `"USA"` |
+| `value` | float | Series value |
+| `source` | str | `"fred"` |
+
+## API Key
+
+Get a free key at [fred.stlouisfed.org/docs/api/api_key.html](https://fred.stlouisfed.org/docs/api/api_key.html).
+
+## Cache
+
+30-day TTL per series code. Connector-level TTL of 1 day.

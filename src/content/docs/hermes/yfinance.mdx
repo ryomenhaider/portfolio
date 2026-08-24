@@ -1,0 +1,47 @@
+---
+title: Yahoo Finance
+order: 190
+section: Connectors
+description: Yahoo Finance — EPS estimates, revenue estimates, earnings history.
+---
+
+**File:** `sources/yf.py`
+
+## What It Does
+
+Wraps the `yfinance` library to fetch analyst estimates and earnings history for US equities.
+
+## Fetch
+
+```python
+df = await hr.yfin.fetch(
+    ticker="AAPL",
+    metrics=["eps_estimate", "revenue_estimate", "earnings_history"],
+)
+```
+
+## Metrics
+
+| Metric | Description |
+|--------|-------------|
+| `eps_estimate` | Analyst EPS estimates |
+| `revenue_estimate` | Analyst revenue estimates |
+| `earnings_history` | Historical earnings (actual vs estimate) |
+
+## Output Columns
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `date` | datetime | Period date |
+| `indicator_id` | str | Metric identifier |
+| `country` | str | N/A |
+| `value` | float | Estimate or actual value |
+| `source` | str | `"yfinance"` |
+
+## Used By
+
+The `FAfeatures` class pulls from Yahoo Finance for earnings estimates and revenue estimates in the `CompanyFundamental` snapshot.
+
+## Cache
+
+1-day TTL.

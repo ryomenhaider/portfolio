@@ -2,7 +2,7 @@
 title: Data Ingestion
 order: 40
 section: Pipelines
-description: Multi-source collection, feature engineering, and the stage runner.
+description: Multi-source collection, analysis data, feature engineering, and the stage runner.
 ---
 
 **Files:** `ingestion/`
@@ -11,39 +11,48 @@ description: Multi-source collection, feature engineering, and the stage runner.
 
 | Fetcher | Source | Data |
 |---------|--------|------|
-| `price_fetcher.py` | yfinance | Stock OHLCV |
-| `crypto_fetcher.py` | CCXT | Crypto OHLCV |
-| `macro_fetcher.py` | FRED | Macro indicators |
-| `news_fetcher.py` | newsdata.io + FinBERT | Headlines + sentiment scores |
-| `feature_engineer.py` | — | Computed features |
+| `price_fetcher.py` | yfinance | 10 US stocks — 10y daily OHLCV |
+| `crypto_fetcher.py` | CCXT (Binance) | 5 crypto pairs — 365d daily OHLCV |
+| `macro_fetcher.py` | FRED | 8 macro indicators (Fed Funds, CPI, Unemployment, GDP, Yield Curve, VIX, USD Index, Mortgage) |
+| `news_fetcher.py` | newsdata.io + FinBERT | Business/finance news headlines — scored with FinBERT sentiment |
+| `analysis_data.py` | hermes-plt | Technical snapshots (80+ fields) + Fundamental snapshots (71 fields) |
+| `feature_engineer.py` | — | Computed features from stock prices |
+
+## Analysis Data
+
+`analysis_data.py` uses the `hermes-plt` library for deep market data:
+
+- **Technical:** 20 crypto symbols via `hr.ta_feature.get_technical()` — OHLCV, returns, MAs, EMAs, volatility, order book, funding rate, open interest, composite scores
+- **Fundamental:** 18 US equities via `hr.fa_features.get_fundamentels()` — income statement, balance sheet, cash flow, valuation ratios, macro indicators, earnings estimates
 
 ## Feature Engineering
 
-Raw prices are transformed into model-ready features:
+`feature_engineer.py` runs after stock price ingestion. For every ticker in the DB:
 
 - Log returns
-- Lags
-- Rolling statistics
-- RSI
-- Bollinger %B
-- Volume ratios
+- Lag features (1d, 5d, 21d, 63d)
+- Rolling statistics (21-day window): mean, std, skew
+- RSI (14-period) via EWM
+- Bollinger %B (20-day, 2 std)
+- Volume ratio (20-day rolling average)
 
 ## Pipeline Runner
 
-`ingestion/ingestion_pipeline.py` runs every stage in sequence and reports pass/fail per stage:
+`ingestion_pipeline.py` runs every stage in sequence with pass/fail reporting:
 
 ```bash
-python -m ingestion.ingestion_pipeline
+stl ingest
 ```
 
-Individual stages can be run standalone — useful for debugging a single source:
+Or run individual stages:
 
 ```bash
 python -m ingestion.price_fetcher
 python -m ingestion.crypto_fetcher
 python -m ingestion.macro_fetcher
 python -m ingestion.news_fetcher
+python -m ingestion.analysis_data
 python -m ingestion.feature_engineer
 ```
 
-Each pipeline exits non-zero on failure, so it can be wired into cron or CI directly.
+Each pipeline exits non-zero on failure.

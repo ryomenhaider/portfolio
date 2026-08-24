@@ -1,16 +1,16 @@
 ---
 title: Overview
 order: 10
-description: What Sentinel is — a financial intelligence platform in a single container.
+description: What Sentinel is — a financial intelligence platform with a React dashboard.
 ---
 
-**Stack:** Python 3.11 · FastAPI · Dash · PostgreSQL · PyOD · Prophet · XGBoost · FinBERT · MLflow
+**Stack:** Python 3.12 · FastAPI · React 19 · PostgreSQL · PyOD · Prophet · XGBoost · FinBERT · MLflow
 
 ## What It Does
 
-Sentinel ingests financial data from multiple public sources, engineers features, trains and serves ML models (anomaly detection, forecasting, sentiment), and exposes everything through a REST API and an interactive dashboard.
+Sentinel ingests financial data from multiple public sources, engineers features, trains and serves ML models (anomaly detection, forecasting, sentiment), and exposes everything through a REST API and a Bloomberg-style React dashboard.
 
-It is built to run as a **single container** — FastAPI serves the API and mounts Dash via WSGI — backed by any PostgreSQL, including Supabase's hosted Postgres, which makes it deployable on free-tier platforms with ephemeral storage.
+The **backend** is a single FastAPI process backed by PostgreSQL (SQLAlchemy 2.0). The **frontend** is a decoupled React SPA served separately.
 
 ## What's Real
 
@@ -19,20 +19,23 @@ Every pipeline, model, endpoint, and dashboard page listed in these docs runs to
 | Area | What's implemented |
 |------|--------------------|
 | Ingestion | Stocks (yfinance), crypto (CCXT), macro (FRED), news (newsdata.io) + FinBERT sentiment |
+| Analysis data | Technical (86 fields) + Fundamental (71 fields) via hermes-plt |
 | Feature engineering | Log returns, lags, rolling stats, RSI, Bollinger %B, volume ratios |
 | Anomaly detection | Isolation Forest + LOF (PyOD), written to DB with severity labels |
 | Forecasting | Prophet + XGBoost with walk-forward cross-validation (30/90-day horizons) |
 | Sentiment | FinBERT scoring of news headlines |
-| Portfolio | Risk-constrained weight allocation via scipy |
+| Portfolio | MPT, Black-Litterman, Kelly Criterion, Blended optimization |
 | MLOps | PSI + Kolmogorov–Smirnov drift detection with email/Slack alerts |
 | Model tracking | MLflow registry with metrics, params, and artifacts |
-| Dashboard | 5 pages: Market Overview, Anomalies, Forecasts, Portfolio, Sentiment |
-| API | OpenAPI/Swagger at `/api/docs`, routers for prices, anomalies, forecasts, sentiment, portfolio |
+| Dashboard | 7 React pages: Overview, Anomalies, Forecasts, Technical, Fundamental, Portfolio, Sentiment |
+| API | REST API at `/api/v1/`, OpenAPI docs at `/api/docs` |
+| CLI | `stl` — ingest, ml-train, api-start, all |
 
 ## Design Choices
 
-- **One process, one port.** No docker-compose, no separate services. PostgreSQL is the only external dependency.
-- **CLI-driven orchestration.** Ingestion and training are `python -m ...` commands; Airflow DAGs under `airflow/` are legacy and no longer used.
+- **Decoupled frontend.** React SPA on its own domain, API on another. CORS fully open for development.
+- **hermes-plt integration.** Technical and fundamental analysis pull from the Hermes library for deep market data.
+- **CLI-driven orchestration.** Ingestion and training are `stl` commands; no scheduler yet.
 - **Environment-driven configuration.** Everything lives in `config/settings.py`, read from `.env`.
 
 See [Architecture](/sentinel#architecture) for the full layout.

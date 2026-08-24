@@ -1,103 +1,87 @@
 ---
-title: Features API
-order: 120
-section: Features Pipeline
-description: Country risk snapshots, ML panels, and the feature registry.
+title: Features
+order: 40
+description: Country risk features, technical analysis, and fundamental analysis.
 ---
 
-**Files:** `hermes/features/country_risk_features/`
+## Country Risk Features
 
-## What It Does
+**Files:** `features/country_risk_features/`
 
-The pipeline computes **58 country risk features** across five dimensions and exposes them in two ways: a snapshot dict for one country, and a multi-country time-series panel for ML. Every feature is a decorated function registered in a lineage graph.
+58 features across 5 groups, each decorated with `@feature` and registered in a lineage graph.
 
-## Feature Groups
+### Feature Groups
 
-| Group | Count | Examples |
-|-------|-------|----------|
-| `economic` | 18 | gdp_growth_yoy, inflation_cpi_yoy, unemployment_rate, government_debt_gdp, banking_sector_health, ... |
-| `geopolitical` | 21 | conflict_event_count_30d, goldstein_scale_avg_30d, battle_deaths_90d, sanctions_count_active, corruption_perception_index, regime_type, ... |
-| `security` | 7 | military_spending_gdp, alliance_strength_score, arms_imports_12m, nato_member, ... |
-| `social` | 6 | human_development_index, fragile_state_index, gini_coefficient, poverty_headcount_ratio, ... |
-| `environmental` | 6 | climate_vulnerability_score, food_price_index_change_yoy, water_stress_index, ... |
+| Group | Count | Key Sources |
+|-------|-------|-------------|
+| Economic | 18 | World Bank, IMF |
+| Geopolitical | 21 | GDELT, OpenSanctions, World Bank, bundled datasets |
+| Security | 7 | SIPRI, NATO |
+| Social | 6 | HRS, FSI, HDI, World Bank |
+| Environmental | 6 | NDGAIN, World Bank |
 
-## Snapshot: Country Risk Dict
+### Dual-Mode Interface
+
+Every feature function follows this signature:
 
 ```python
-risk = hr.features.get_country_risk_features("UKR")
-
-risk["economic"]["gdp_growth_yoy"]
-risk["geopolitical"]["sanctions_count_active"]
-risk["metadata"]["last_updated"]
+async def feature_name(country_code: str, mode: Literal["F", "ML"]) -> float | pd.Series
 ```
 
-Returns a nested dict with one key per group, plus `metadata`. Features that fail (no data, connector error) come back as `NaN` rather than crashing.
-
-## Feature Modes
-
-Every feature function accepts a `mode` argument:
-
-| Mode | Returns | Use case |
+| Mode | Returns | Use Case |
 |------|---------|----------|
-| `"F"` | `float` / `int` / `bool` | Latest value for dashboards and snapshots |
-| `"ML"` | `pd.Series` (monthly index) | Time series for training and forecasting |
+| `"F"` | Scalar (float, int, str, bool) | Dashboards — latest value |
+| `"ML"` | Monthly `pd.Series` with DatetimeIndex | ML training — time-series panel |
+
+Missing data returns `np.nan` (`"F"`) or empty `pd.Series` (`"ML"`) — never raises.
+
+### Snapshot
 
 ```python
-# Call a single feature directly
-hr.lf.eco.gdp_growth_yoy(country_code="USA", mode="F")
-# -> 2.1
-
-# Or as a monthly series
-hr.lf.eco.inflation_cpi_yoy(country_code="DEU", mode="ML")
-# -> 2023-01-01    4.3
-#    2023-02-01    4.1
-#    ...
+risk = await hr.country_features.get_country_risk_features("USA")
+# {"country": "USA", "economic": {...}, "geopolitical": {...}, ...}
 ```
 
-## Training Panels
-
-Build a multi-country, monthly panel for ML by passing the feature functions and country codes:
+### Training Panel
 
 ```python
-panel = hr.features.build_training_panel(
-    fns=[
-        hr.lf.eco.gdp_growth_yoy,
-        hr.lf.eco.inflation_cpi_yoy,
-        hr.lf.geo.conflict_event_count_30d,
-    ],
-    countries=["USA", "UKR", "DEU"],
+panel = await hr.country_features.build_training_panel(
+    fns=hr.list_features[:5],
+    countries=["USA", "GBR", "DEU"],
 )
-# DataFrame with (country_iso3, date) MultiIndex
-# Columns: gdp_growth_yoy, inflation_cpi_yoy, conflict_event_count_30d
+# pd.DataFrame with MultiIndex(country_iso3, date)
 ```
 
-## Listing Features
+### Feature Decorator
+
+Features are registered via `@feature(name, group, deps, compute)` in `core/feature_decorator.py`. The `LineageGraph` singleton tracks dependencies and resolves execution order via topological sort into tiers (`TieredPlan`).
+
+## Technical Analysis
+
+**File:** `features/analysis/technical.py`
+
+`TAfeatures` computes an 86-field `TechnicalSnapshot` from Binance data:
 
 ```python
-# All feature callables
-hr.list_features
-
-# Registry with grouped access
-hr.lf.eco      # economic features
-hr.lf.geo      # geopolitical features
-hr.lf.sec      # security features
-hr.lf.soc      # social features
-hr.lf.env      # environmental features
+ta = await hr.ta_feature.get_technical("BTCUSDT")
+ta.trend_score      # composite trend score
+ta.rsi_14           # RSI(14)
+ta.bid_ask_spread   # order book spread in bps
 ```
 
-## Lineage & Decorator
+See [Technical Features](/hermes#technical-analysis) for the full field list.
 
-**File:** `hermes/core/feature_decorator.py`
+## Fundamental Analysis
 
-Each feature is registered via the `@feature` decorator with its name, group, dependencies, and a compute description. A global `LineageGraph` collects these registrations and can resolve a group into dependency-ordered execution tiers:
+**File:** `features/analysis/fundamental.py`
+
+`FAfeatures` computes a 71-field `CompanyFundamental` from Finnhub, SEC EDGAR, FRED, and Yahoo Finance:
 
 ```python
-from hermes.core.feature_decorator import lineagegraph
-
-plan = lineagegraph.resolve_group("economic_features")
-plan.tiers        # execution order (dependency-ordered)
-plan.all_features # every feature name in the group
-
-lineagegraph.save("lineage.json")  # persist the graph
-lineagegraph.load("lineage.json")  # restore it
+fa = await hr.fa_features.get_fundamentels("AAPL")
+fa.pe_ratio         # P/E ratio
+fa.revenue          # latest revenue
+fa.gdp_growth       # macro context
 ```
+
+See [Fundamental Features](/hermes#fundamental-analysis) for the full field list.

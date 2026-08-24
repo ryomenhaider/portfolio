@@ -1,18 +1,24 @@
 ---
 title: Deployment
 order: 90
-description: Single-container deployment with any PostgreSQL — including free tiers.
+description: Backend on Render, frontend on Render — PostgreSQL as the only external dependency.
 ---
 
-## The Container
+## Backend
 
-The Dockerfile builds one image with:
+The backend runs as a single uvicorn process on **Render free-tier** (`https://sentinel-ggi8.onrender.com`).
 
-- CPU torch from the PyTorch CPU index
-- A single uvicorn process serving API + dashboard
-- Healthcheck on `/api/health`
+- No Dockerfile — Render auto-detects Python and runs `uvicorn api.main:app`
+- Health check on `/api/health`
+- JSON logging with rotating file handler (fails silently on read-only containers)
 
-No docker-compose, no separate services — one image, one process, one port.
+## Frontend
+
+The React SPA is deployed separately on **Render** as a static site.
+
+- Built with `npm run build` → `dist/`
+- In development: Vite dev server at `:5173` with proxy to backend at `:7860`
+- In production: hits `VITE_API_URL` directly
 
 ## Database
 
@@ -20,14 +26,30 @@ PostgreSQL is the only external dependency. Any of these work:
 
 - Local Postgres
 - Docker container
-- Supabase hosted Postgres (pooler URL)
+- Supabase hosted Postgres (pooler URL, sslmode=require)
 
-Supabase works because all state lives in Postgres — ephemeral filesystem storage is fine.
-
-## Deployable Targets
-
-The ephemeral-storage-friendly design makes it deployable on free-tier platforms like **Hugging Face Spaces** (see `res/PHASE_5_DEPLOY_HUGGINGFACE.md` for the plan).
+All state lives in Postgres — ephemeral filesystem storage is fine for free-tier deployments.
 
 ## Configuration
 
-All deployment config is environment-driven (`config/settings.py`, `.env`): `DB_URL`, API keys for each data source, `MLFLOW_URI`, `API_BASE_URL`, and the dashboard API key.
+All config is environment-driven (`config/settings.py`, `.env`):
+
+| Variable | Purpose |
+|----------|---------|
+| `DB_URL` | SQLAlchemy PostgreSQL URL |
+| `FRED_API_KEY` | FRED macro data |
+| `NEWSDATA_API_KEY` | News ingestion |
+| `FINNHUB_API` | Finnhub (for hermes-plt) |
+| `OPENSANCTIONS_API` | OpenSanctions (for hermes-plt) |
+| `SEC_USERNAME` / `SEC_EMAIL` | SEC EDGAR (for hermes-plt) |
+| `MLFLOW_URI` | MLflow tracking URI |
+| `SMTP_*` | Email drift alerts |
+| `SLACK_WEBHOOK_URL` | Slack drift alerts |
+
+## What's Not Done Yet
+
+- No Dockerfile (planned for Phase 4)
+- No CI/CD (GitHub Actions workflow exists but is empty)
+- No unit or integration tests
+- No auth or rate limiting (auth code is commented out)
+- No scheduled retraining (manual CLI only)

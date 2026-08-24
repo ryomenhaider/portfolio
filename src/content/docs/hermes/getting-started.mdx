@@ -1,14 +1,23 @@
 ---
 title: Getting Started
 order: 10
-description: Install Hermes, configure the OpenSanctions key, and run your first queries.
+description: Install Hermes, configure API keys, and run your first queries.
 ---
 
 ## Requirements
 
 - Python **>= 3.11**
 - [uv](https://docs.astral.sh/uv/) for dependency management
-- An [OpenSanctions](https://www.opensanctions.org/) API key
+
+## API Keys
+
+| Service | Key | Purpose |
+|---------|-----|---------|
+| [OpenSanctions](https://www.opensanctions.org/) | `opensanction_api` | Sanctions lists (OFAC, EU, UK, UN) |
+| [FRED](https://fred.stlouisfed.org/docs/api/api_key.html) | `fred_api` | 23 US economic series |
+| [Finnhub](https://finnhub.io/) | `finnhub_api` | Stock fundamentals, candles, profiles |
+| SEC EDGAR | `sec_username` + `sec_email` | Company facts via XBRL (free, register at EDGAR) |
+| [NewsData](https://newsdata.io/) | `new_data_api` | News ingestion (wired, no connector yet) |
 
 ## Installation
 
@@ -18,39 +27,38 @@ cd Hermes
 uv sync --extra dev
 ```
 
-The `dev` extra pulls in pytest, ruff, mypy, and other development tools. Use plain `uv sync` for a production install.
-
-## Configuration
-
-Copy the environment template and add your OpenSanctions API key:
-
-```bash
-cp .env.example .env
-# OPEN_SANCTIONS_API=your_key_here
-```
-
-> The API key is required. Instantiating `Hermes` without one raises a `KeyError`.
-
 ## Quick Start
 
 ```python
+import asyncio
 from hermes import Hermes
-from dotenv import load_dotenv
-import os
 
-load_dotenv()
+async def main():
+    hr = Hermes(
+        opensanction_api="your-key",
+        new_data_api="",
+        fred_api="your-key",
+        sec_username="your-username",
+        sec_email="you@example.com",
+        finnhub_api="your-key",
+    )
 
-hr = Hermes(opensanction_api=os.getenv("OPEN_SANCTIONS_API"))
+    # Country risk snapshot
+    risk = await hr.country_features.get_country_risk_features("USA")
+    print(risk["economic"]["gdp_growth_yoy"])
 
-# Every supported country code (ISO3)
-print(hr.list_countries)
+    # List all supported countries
+    print(len(hr.list_countries))  # ~250
 
-# All available feature functions
-print(hr.list_features)
+    # Direct connector usage
+    df = await hr.world_bank.fetch("NY.GDP.MKTP.KD.ZG", "USA", 2010, 2024)
+    print(df.head())
+
+asyncio.run(main())
 ```
 
-## What's Next
+## What to Read Next
 
-- [Hermes Class](/hermes/hermes) — the SDK facade and its methods
-- [Features API](/hermes/features) — country risk snapshots and ML panels
-- [Data Cache](/hermes/cache) — how raw responses are stored
+- [Connectors](/hermes#data-source-connectors) — fetch raw data from each source
+- [Features](/hermes#feature-registry) — 58 country risk features + analysis models
+- [Cache](/hermes#cache) — TTL-based Parquet caching system

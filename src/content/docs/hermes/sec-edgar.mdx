@@ -1,0 +1,46 @@
+---
+title: SEC EDGAR
+order: 180
+section: Connectors
+description: SEC EDGAR XBRL company facts — income, balance sheet, cash flow.
+---
+
+**File:** `sources/sec_edgar.py`
+
+## What It Does
+
+Fetches company financial facts from the SEC EDGAR XBRL API (`data.sec.gov/api/xbrl/companyfacts`). Provides structured access to income statements, balance sheets, and cash flow data.
+
+## Fetch
+
+```python
+df = await hr.sec_edger.fetch(
+    ticker="AAPL",
+    tags=["Revenues", "NetIncomeLoss", "Assets"],
+)
+```
+
+## Notes
+
+- Uses `sec-cik-mapper` for automatic ticker → CIK lookup
+- User-Agent header required: `"{username} {email}"` (set in constructor)
+- Covers all US publicly traded companies
+- Data is quarterly and annual
+
+## Output Columns
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `date` | datetime | Filing date |
+| `indicator_id` | str | XBRL tag (e.g. `Revenues`) |
+| `country` | str | N/A |
+| `value` | float | Filing value |
+| `source` | str | `"sec_edgar"` |
+
+## Used By
+
+The `FAfeatures` class pulls from SEC EDGAR for income statement, balance sheet, and cash flow fields in the 71-field `CompanyFundamental` snapshot.
+
+## Cache
+
+7-day TTL.

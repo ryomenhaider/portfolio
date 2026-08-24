@@ -1,0 +1,48 @@
+---
+title: Public Datasets
+order: 200
+section: Connectors
+description: Bundled static CSV datasets — HRS, HDI, CPI, FSI, NATO, CRS, CVS, SIPRI.
+---
+
+**File:** `sources/public_data.py`
+
+## What It Does
+
+Provides access to 8 bundled static CSV datasets in `sources/lib/datasets/`. No network requests — data ships with the package.
+
+## Datasets
+
+| File | Name | Fields | Used By |
+|------|------|--------|---------|
+| `hrs.csv` | Human Rights Scores | country, year, score | `human_rights_score` |
+| `hdi1.csv` | Human Development Index | country, year, hdi | `human_development_index` |
+| `global_cpi_all.csv` | Corruption Perception Index | country, year, score | `corruption_perception_index` |
+| `fsi.csv` | Fragile States Index | country, year, total | `fragile_state_index` |
+| `nato.csv` | NATO Membership | country, member | `nato_member` |
+| `crs.csv` | Climate Readiness Score (NDGAIN) | country, year, score | `climate_readiness_score` |
+| `cvs.csv` | Climate Vulnerability Score (NDGAIN) | country, year, score | `climate_vulnerability_score` |
+| `sipri.csv` | SIPRI Military Spending | country, year, spending_gdp, growth | `military_spending_gdp` |
+
+## Fetch
+
+```python
+df = await hr.datasets.fetch(
+    dataset="hrs",          # dataset name
+    country="USA",          # optional filter
+)
+```
+
+## Output Columns
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `date` | datetime | Year (if applicable) |
+| `indicator_id` | str | Dataset name |
+| `country` | str | ISO3 country code |
+| `value` | float | Dataset value |
+| `source` | str | `"public_data"` |
+
+## Notes
+
+These datasets replace API calls for indicators that are static or update infrequently. They back several features in the security, social, and environmental groups.

@@ -1,62 +1,54 @@
 ---
-title: Data Cache
-order: 30
-section: Hermes SDK
-description: How RawCache stores API responses as Parquet on disk.
+title: Cache
+order: 50
+description: Parquet-backed TTL cache with per-source expiry and session statistics.
 ---
 
-**File:** `hermes/core/cache.py`
+**File:** `core/cache.py`
 
-## What It Does
+## How It Works
 
-The `RawCache` stores every raw API response as a Parquet file on disk, keyed by a SHA-256 hash of the source and request parameters. Connectors read from the cache instead of re-hitting the API, which keeps repeated calls fast and avoids burning rate limits.
+Every fetch goes through `RawCache.get_or_fetch()`. Data is stored as Parquet files with a sidecar `.meta.json` under `~/.hermes_cache/raw/<source>/<hash>.parquet`.
 
-## Storage
+**Keying:** SHA-256 of `"{source}:{json(params, sort_keys=True)}"`, truncated to 16 hex chars.
 
-- Default location: `~/.hermes_cache/raw/`
-- Layout: `~/.hermes_cache/raw/{source}/{hash}.parquet`
-- Each file is paired with a `{hash}.meta.json` sidecar (source, params, cached_at, rows, columns)
-- Default TTL: `24 hours`
+**Flow:** Check cache → if miss or expired, call async fetch → store result → return DataFrame.
 
 ## Per-Source TTLs
 
-Each connector sets its own TTL based on how often the underlying data changes:
-
-| Source | TTL | Why |
-|--------|-----|-----|
-| GDELT | 6 hours | Event data updates constantly. |
-| World Bank | 7 days | Indicators released weekly. |
-| IMF | 7 days | Dataflows refresh weekly. |
-| OpenSanctions | 30 days | Sanctions lists change slowly. |
+| Source | TTL |
+|--------|-----|
+| GDELT | 6 hours |
+| World Bank | 7 days |
+| IMF | 7 days |
+| SEC EDGAR | 7 days |
+| Finnhub | 7 days |
+| OpenSanctions | 30 days |
+| FRED | 30 days (per code) |
+| Binance | 1 day |
+| Yahoo Finance | 1 day |
+| Public Datasets | static (no cache) |
 
 ## API
 
-### `get(source, params, ttl=None) → DataFrame`
+| Method | Description |
+|--------|-------------|
+| `get(source, params, ttl)` | Read cached DataFrame; raises `CacheMiss` on miss/expiry |
+| `put(source, params, df)` | Write DataFrame to Parquet with metadata |
+| `get_or_fetch(source, params, fetch_fn, force, ttl)` | Try cache first (skip if `force=True`), fall back to `fetch_fn` |
+| `clear(older_than)` | Evict entries older than a `timedelta` (supports `h`/`d`/`w` units) |
+| `stats()` | File counts by source, hit/miss counts, hit rates |
 
-Reads a cached response. Raises `CacheMiss` if the file is missing, expired (file is deleted), or corrupted (file is deleted and re-fetched).
-
-### `put(source, params, df)`
-
-Writes a DataFrame to the cache with its metadata sidecar.
-
-### `get_or_fetch(source, params, fetch_fn, force=False, ttl=None) → DataFrame`
-
-The workhorse used by every connector: try the cache first, and only call `fetch_fn` on a miss. Pass `force=True` to bypass the cache and refresh from the API.
+## Usage
 
 ```python
-df = cache.get_or_fetch(
-    source="world_bank",
-    params={"country": "USA", "indicator": "NY.GDP.MKTP.KD.ZG"},
-    fetch_fn=lambda: api_call(),
-    force=False,
-    ttl=timedelta(days=7),
-)
+# Force a fresh fetch (bypass cache)
+df = await hr.world_bank.fetch("NY.GDP.MKTP.KD.ZG", "USA", 2010, 2024, force=True)
+
+# Check cache health
+stats = hr.cache_stats()
+# {"files": {"world_bank": 42, "fred": 18, ...}, "hits": {...}, "misses": {...}}
+
+# Evict old entries
+hr.clear_cache(older_than="7d")
 ```
-
-### `clear(older_than: timedelta | None = None)`
-
-Deletes cached files (and their metadata). Without arguments it wipes everything; with a `timedelta` it only removes entries older than that age.
-
-### `stats() → dict`
-
-Returns `total_files`, `by_source`, `hits`, `misses`, and `hit_rate` per source.

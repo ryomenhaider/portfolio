@@ -1,43 +1,38 @@
 ---
-title: Country Data
-order: 40
-section: Hermes SDK
-description: Supported ISO 3166-1 alpha-3 country codes and validation.
+title: Countries
+order: 60
+description: ISO3 country codes — supported list, validation, and coverage.
 ---
 
-**File:** `hermes/core/countries.py`
+## Supported Codes
 
-## What It Does
-
-Defines the `countries` list — every ISO 3166-1 alpha-3 country code the SDK supports. Connectors and feature functions expect these three-letter codes (e.g. `"USA"`, `"UKR"`, `"DEU"`).
-
-## Usage
+Hermes uses **~250 ISO3 country codes** (Alpha-3) from the `pycountry` library. Full list accessible via:
 
 ```python
-from hermes import Hermes
-
-hr = Hermes(opensanction_api=...)
-
-# Full list of supported codes
-print(hr.list_countries)
-# ['AFG', 'ALA', 'ALB', 'DZA', 'ASM', ...]
-
-# Iterate countries to build panels or batch snapshots
-for code in hr.list_countries:
-    print(code)
+hr.list_countries  # ["AFG", "ALB", "DZA", ...]
 ```
 
 ## Validation
 
-Feature functions validate country codes with `pycountry` and raise a `RuntimeError` for invalid ISO3 codes:
-
 ```python
-# Raises: RuntimeError("The XYZ is not iso3")
-hr.features.get_country_risk_features("XYZ")
+from hermes.core.countries import check_iso3
+
+check_iso3("USA")  # True
+check_iso3("XYZ")  # raises ValueError
 ```
 
-## Notes
+## Coverage Notes
 
-- The list covers roughly 240 codes, including territories and dependencies.
-- Coverage varies per connector — some indicators are not available for every territory.
-- Connectors handle the ISO3 → ISO2 / FIPS conversions internally where needed.
+Not every source covers every country:
+
+| Source | Coverage |
+|--------|----------|
+| World Bank | ~200 countries |
+| IMF | ~190 countries |
+| GDELT | Global (event-level) |
+| OpenSanctions | Global (entity-level) |
+| FRED | United States only |
+| Binance | N/A (asset-based, not country-based) |
+| Bundled datasets | Varies (HRS: ~200, HDI: ~190, FSI: ~170, SIPRI: ~170) |
+
+Features that depend on missing data return `NaN` rather than raising.

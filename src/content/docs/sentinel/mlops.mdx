@@ -2,18 +2,51 @@
 title: MLOps & Drift
 order: 60
 section: Pipelines
-description: PSI + KS drift detection per feature against a rolling baseline, with alerts.
+description: PSI + KS drift detection per feature against a rolling baseline, with email/Slack alerts.
 ---
 
-**File:** `mlops/drift_detector.py`
+**File:** `mlops/drift_detector.py` (411 lines)
 
 ## What It Does
 
-Runs **PSI** (Population Stability Index) and **Kolmogorov–Smirnov** tests per feature against a rolling baseline, so distribution shifts in live data are caught before they degrade model performance.
+Runs statistical tests per feature against a rolling baseline, catching distribution shifts before they degrade model performance.
+
+## Windows
+
+| Window | Days | Purpose |
+|--------|------|---------|
+| Baseline | 180 days | Reference distribution |
+| Production | 30 days | Current distribution |
+
+## Monitored Features (11)
+
+| Feature | Description |
+|---------|-------------|
+| `log_return` | Daily log return |
+| `lag_1d` | 1-day lag |
+| `lag_5d` | 5-day lag |
+| `lag_21d` | 21-day lag |
+| `lag_63d` | 63-day lag |
+| `rolling_mean_21` | 21-day rolling mean |
+| `rolling_std_21` | 21-day rolling std |
+| `rolling_skew_21` | 21-day rolling skew |
+| `rsi_14` | RSI(14) |
+| `bb_pct_b` | Bollinger %B |
+| `volume_ratio` | 20-day volume ratio |
+
+## Statistical Tests
+
+| Test | Threshold | Trigger |
+|------|-----------|---------|
+| PSI (Population Stability Index) | > 0.2 | Drift alert |
+| KS (Kolmogorov–Smirnov) | p-value below 0.05 | Distribution shift |
 
 ## Alerting
 
-Drift triggers **email + Slack alerts** — configurable via environment settings.
+Drift triggers **email + Slack alerts** with detailed reports:
+
+- **Email:** HTML-formatted, includes drifted features, PSI values, baseline vs production means
+- **Slack:** Block Kit formatting via webhook
 
 ## CLI
 
@@ -21,8 +54,10 @@ Drift triggers **email + Slack alerts** — configurable via environment setting
 python mlops/drift_detector.py --tickers AAPL,MSFT --send-alerts
 ```
 
+- Exit code 1 if drift detected (CI-friendly), 0 if stable
+
 ## Roadmap
 
 - Persist drift runs and expose via API
 - Visualize drift in the dashboard
-- Add Prometheus/Grafana observability (see `res/PHASE_3_OBSERVABILITY.md`)
+- Add Prometheus/Grafana observability

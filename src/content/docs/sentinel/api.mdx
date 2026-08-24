@@ -1,29 +1,68 @@
 ---
 title: API Reference
 order: 70
-description: REST endpoints for prices, anomalies, forecasts, sentiment, and portfolio.
+description: REST endpoints — prices, anomalies, forecasts, sentiment, portfolio, and analysis.
 ---
 
-**Base:** `/api` — interactive docs at `/api/docs`, health at `/api/health`
+**Base:** `/api/v1` — interactive docs at `/api/docs`, health at `/api/health`
 
-| Endpoint | Description |
-|----------|-------------|
-| `GET /api/health` | App + DB health |
-| `GET /api/prices/compare?tickers=AAPL,MSFT` | Latest quotes, multi-asset |
-| `GET /api/prices/{ticker}` | Latest price |
-| `GET /api/prices/{ticker}/history?limit=90` | OHLCV history |
-| `GET /api/anomalies/detected?ticker=&days=` | Detected anomalies |
-| `GET /api/anomalies/{ticker}` | Anomalies for one asset |
-| `GET /api/forecasts/{ticker}?days=30` | Prophet/XGBoost forecast |
-| `GET /api/forecasts/compare/{ticker}` | Actual vs predicted |
-| `GET /api/sentiment/heatmap` | Latest sentiment per ticker |
-| `GET /api/sentiment/timeline?ticker=&days=` | Sentiment history |
-| `GET /api/portfolio/metrics` | Portfolio metrics |
-| `POST /api/portfolio/optimize` | Run optimization |
+## Health
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/health` | App + DB health check |
+
+## Prices (`/api/v1/prices`)
+
+| Method | Path | Query | Description |
+|--------|------|-------|-------------|
+| GET | `/compare` | `tickers=AAPL,MSFT` | Latest quotes, multi-asset |
+| GET | `/{ticker}` | — | Latest price for one asset |
+| GET | `/{ticker}/history` | `limit=90` | OHLCV history |
+
+## Anomalies (`/api/v1/anomalies`)
+
+| Method | Path | Query | Description |
+|--------|------|-------|-------------|
+| GET | `/latest` | — | Most recent anomaly |
+| GET | `` | `ticker=&days=30` | Anomalies for ticker |
+| POST | `/detect/{ticker}` | — | Trigger on-demand detection |
+
+## Forecasts (`/api/v1/forecasts`)
+
+| Method | Path | Query | Description |
+|--------|------|-------|-------------|
+| GET | `/compare` | `tickers=&horizon=30` | Multi-asset forecast comparison |
+| GET | `/{ticker}` | `horizon=30` | Prophet + XGBoost forecast |
+
+## Sentiment (`/api/v1/sentiment`)
+
+| Method | Path | Query | Description |
+|--------|------|-------|-------------|
+| GET | `/heatmap` | — | Latest sentiment per ticker |
+| GET | `/timeline` | `ticker=&days=` | Sentiment history |
+| GET | `/{ticker}` | `days=30` | Sentiment for one ticker |
+
+## Portfolio (`/api/v1/portfolio`)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/weights` | Latest optimized weights |
+| GET | `/optimize` | Re-run optimization |
+| GET | `/backtest` | Backtest (coming soon) |
+
+## Analysis (`/api/v1/analysis`)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/technical/{symbol}` | Crypto technical snapshot (86 fields) |
+| GET | `/fundamental/{ticker}` | Stock fundamental snapshot (71 fields) |
 
 ## Smoke Checks
 
 ```bash
 curl http://localhost:7860/api/health
-curl http://localhost:7860/api/prices/AAPL/history?limit=5
+curl http://localhost:7860/api/v1/prices/AAPL/history?limit=5
+curl http://localhost:7860/api/v1/analysis/technical/BTCUSDT
+curl http://localhost:7860/api/v1/analysis/fundamental/AAPL
 ```
